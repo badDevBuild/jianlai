@@ -1,0 +1,119 @@
+@import '../../styles/theme.scss';
+
+.quotes-page {
+  height: 100vh;
+  background: $paper-white;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  padding: 40px;
+  background: #fff;
+  border-bottom: 2px solid $ink-faint;
+  text-align: center;
+  flex-shrink: 0; // Prevent shrinking
+
+  .title {
+    display: block;
+    font-size: 40px;
+    font-family: "Songti SC", serif;
+    font-weight: bold;
+    color: $ink-dark;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-size: 24px;
+    color: $ink-medium;
+  }
+}
+
+.quotes-list {
+  flex: 1;
+  min-height: 0; // Critical for scrolling
+  padding: 24px 40px; // side padding same as detail
+  box-sizing: border-box;
+  background: #faf9f6; // 稍微有点区别的背景
+}
+
+.list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-bottom: 60px;
+  padding-top: 16px;
+}
+
+.quote-card {
+  background: #fff;
+  padding: 40px;
+  border-radius: 2px; // 更犀利的角，像纸片
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba($ink-dark, 0.05);
+  position: relative;
+  overflow: hidden;
+
+  // 装饰性纹理 (可选)
+  &:after {
+    content: '"';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 80px;
+    color: rgba($ink-light, 0.1);
+    font-family: serif;
+    line-height: 1;
+  }
+
+  .quote-content {
+    font-size: 34px;
+    line-height: 1.8;
+    color: $ink-dark;
+    font-family: "Songti SC", serif;
+    margin-bottom: 32px;
+    text-align: justify;
+    position: relative;
+    z-index: 1;
+  }
+
+  .quote-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .author-info {
+      text-align: right;
+      margin-right: 16px;
+
+      .author-name {
+        font-size: 28px;
+        font-weight: 600;
+        color: $ink-main;
+      }
+
+      .context {
+        display: block;
+        font-size: 22px;
+        color: $ink-light;
+        margin-top: 4px;
+      }
+    }
+
+    .author-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 36px;
+      background: #f0f0f0;
+      border: 2px solid rgba($ink-dark, 0.1);
+    }
+  }
+}
+
+.loading,
+.loading-more {
+  text-align: center;
+  padding: 32px;
+  color: $ink-light;
+  font-size: 24px;
+}

@@ -1,0 +1,16 @@
+{
+  "miniprogramRoot": "./dist",
+  "projectname": "剑来光阴",
+  "description": "剑来世界百科小程序 - 人物、宗派、法宝、地点图鉴",
+  "appid": "wxfcb4da77a987940f",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": false,
+    "compileHotReLoad": true,
+    "postcss": false,
+    "minified": true
+  },
+  "compileType": "miniprogram",
+  "lazyCodeLoading": "requiredComponents"
+}

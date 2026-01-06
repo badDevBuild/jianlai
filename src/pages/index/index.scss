@@ -1,0 +1,354 @@
+@import '../../styles/theme.scss';
+
+.index-page {
+  min-height: 100vh;
+  background-color: $paper-white; // 浅色背景
+  color: $ink-main;
+  font-family: system-ui, -apple-system, sans-serif;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+// 顶部装饰 - 淡墨晕染
+.bg-decoration {
+  display: none;
+}
+
+// 沉浸式 Header
+.custom-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95); // 轻微磨砂白底
+  backdrop-filter: blur(10px);
+  padding-left: 40px; // 20px -> 40px
+
+  .header-content {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    .app-title {
+      font-family: "Songti SC", serif;
+      font-size: 44px;
+      font-weight: 600;
+      color: #000;
+      margin-right: 0;
+      flex-shrink: 0;
+
+      .title-highlight {
+        color: #3b82f6;
+      }
+    }
+  }
+}
+
+// 页面级大搜索框
+.page-search-field {
+  background: #fff;
+  height: 88px;
+  border-radius: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  margin-top: 24px;
+  margin-bottom: 48px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border: 2px solid rgba($ink-dark, 0.03);
+  transition: all 0.2s;
+
+  &:active {
+    background: #fafafa;
+    transform: scale(0.99);
+  }
+
+  .search-icon {
+    font-size: 36px;
+    color: $ink-light;
+    margin-right: 24px;
+  }
+
+  .search-text {
+    font-size: 30px;
+    color: $ink-light;
+  }
+}
+
+.content-container {
+  padding: 0 40px; // 20px -> 40px
+}
+
+// 通用 Section
+.section-container {
+  margin-bottom: 48px; // 24px -> 48px
+
+  // 第一个 section 增加顶部间距
+  &:first-child {
+    margin-top: 32px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px; // 16px -> 32px
+
+    .section-title {
+      font-size: 36px; // 18px -> 36px
+      font-weight: 600;
+      color: $ink-dark;
+      font-family: "Songti SC", serif;
+    }
+
+    .section-link {
+      font-size: 26px; // 13px -> 26px
+      color: #3b82f6;
+      display: flex;
+      align-items: center;
+
+      .arrow {
+        font-size: 32px; // 16px -> 32px
+        margin-left: 4px;
+        margin-top: -4px;
+      }
+    }
+  }
+}
+
+// 风流人物 - 横滚
+.characters-scroll {
+  white-space: nowrap;
+  width: 100%;
+
+  .character-card {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    width: 144px; // 72px -> 144px
+    margin-right: 48px; // 24px -> 48px
+    vertical-align: top;
+
+    .avatar-wrapper {
+      width: 128px; // 64px -> 128px
+      height: 128px;
+      padding: 4px; // 2px -> 4px
+      border-radius: 50%;
+      border: 2px solid #e5e7eb; // 1px -> 2px
+      margin-bottom: 16px; // 8px -> 16px
+      position: relative;
+
+      .character-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: #f3f4f6;
+      }
+    }
+
+    .character-name {
+      font-size: 28px; // 14px -> 28px
+      color: $ink-main;
+      font-weight: 500;
+    }
+
+    // 选中态/高亮态
+    &.active .avatar-wrapper {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px #3b82f6; // 1px -> 2px
+    }
+
+    &.active .character-name {
+      color: #3b82f6;
+    }
+  }
+
+  .scroll-spacer {
+    display: inline-block;
+    width: 40px; // 20px -> 40px
+    height: 2px;
+  }
+}
+
+// 2x2 Grid
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px; // 12px -> 24px
+  margin-bottom: 64px; // 32px -> 64px
+
+  .grid-card {
+    background: #fff;
+    border-radius: 24px; // 12px -> 24px
+    padding: 32px; // 16px -> 32px
+    display: flex;
+    justify-content: space-between;
+    align-items: center; // 垂直居中
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    border: 2px solid rgba(0, 0, 0, 0.02);
+
+    &:active {
+      background: #fafafa;
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+
+      .card-title {
+        font-size: 30px; // 15px -> 30px
+        font-weight: 600;
+        color: $ink-dark;
+        margin-bottom: 8px; // 4px -> 8px
+      }
+
+      .card-count {
+        font-size: 22px; // 11px -> 22px
+        color: $ink-light;
+      }
+    }
+
+    .card-icon-bg {
+      width: 72px; // 36px -> 72px
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .card-icon {
+        font-size: 36px; // 18px -> 36px
+      }
+    }
+  }
+}
+
+// 每日金句大卡片
+.quote-card-large {
+  position: relative;
+  width: 100%;
+  height: 480px; // 600px -> 480px (减少高度)
+  border-radius: 32px; // 16px -> 32px
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); // 轻柔阴影
+  overflow: hidden;
+  background: #faf9f6; // 米色/宣纸色
+
+  .quote-bg-image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.3; // 降低透明度 (make it fainter)
+    filter: grayscale(100%) contrast(1.2) brightness(1.2);
+    mix-blend-mode: multiply; // 正片叠底，融入背景
+  }
+
+  .quote-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    // 顶部到底部的渐变
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent, rgba(255, 255, 255, 0.5));
+  }
+
+  .quote-content-wrap {
+    position: relative;
+    z-index: 2;
+    padding: 40px 40px 100px; // 底部留出 footer 空间
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+    box-sizing: border-box;
+
+    .quote-mark-left {
+      align-self: flex-start;
+      font-size: 80px; // 40px -> 80px
+      color: #93c5fd; // 浅蓝引号
+      line-height: 1;
+      font-family: serif;
+    }
+
+    .quote-text {
+      font-size: 36px; // 18px -> 36px
+      color: $ink-dark;
+      line-height: 1.8;
+      font-family: "Songti SC", serif;
+      margin: 8px 0; // 20px -> 8px (进一步减少文字间距)
+      font-size: 38px;
+      color: $ink-dark;
+      line-height: 1.6; // 1.8 -> 1.6 (紧凑一点)
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .quote-mark-right {
+      display: none; // H5 图里也没右引号，或者很淡
+    }
+
+    .quote-author-line {
+      display: flex;
+      align-items: center;
+      margin-bottom: 40px; // 80px -> 40px (减少底部间距)
+
+      .line {
+        width: 60px; // 30px -> 60px
+        height: 4px; // 2px -> 4px
+        background: #3b82f6;
+        margin-right: 16px; // 8px -> 16px
+      }
+
+      .author-name {
+        font-size: 28px; // 14px -> 28px
+        color: #3b82f6;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .quote-actions {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 88px; // 固定高度作为一行
+    padding: 0 40px; // 左右内边距
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; // 内容靠右
+    background: rgba(255, 255, 255, 0.3); // 轻微背景区分
+    backdrop-filter: blur(4px); // 毛玻璃效果增强层次感
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+    .action-text {
+      font-size: 24px; // 12px -> 24px
+      color: $ink-medium;
+      margin-right: 16px; // 8px -> 16px
+    }
+
+    .action-btn {
+      width: 56px; // 28px -> 56px
+      height: 56px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px; // 14px -> 28px
+      color: $ink-medium;
+    }
+  }
+}
+
+.loading-state {
+  padding: 40px;
+  text-align: center;
+  color: $ink-light;
+  font-size: 28px;
+}

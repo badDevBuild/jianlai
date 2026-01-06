@@ -1,0 +1,192 @@
+@import '../../styles/theme.scss';
+
+.timeline-page {
+    height: 100vh;
+    background: $paper-white;
+
+    .page-header {
+        padding: 48px 40px;
+        background: #fff;
+        border-bottom: 2px solid rgba($ink-dark, 0.05);
+
+        .title {
+            display: block;
+            font-size: 48px;
+            font-weight: 600;
+            color: $ink-dark;
+            font-family: "Songti SC", serif;
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 28px;
+            color: $ink-medium;
+        }
+    }
+
+
+
+    // 类型筛选
+    .type-filter {
+        white-space: nowrap;
+        background: #fff;
+        padding: 24px 40px;
+        border-bottom: 2px solid rgba($ink-dark, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        box-sizing: border-box;
+        width: 100%;
+
+        .type-tag {
+            display: inline-block;
+            padding: 12px 32px;
+            background: #f8f8f8;
+            border-radius: 32px;
+            font-size: 28px;
+            color: $ink-medium;
+            margin-right: 20px;
+            transition: all 0.3s;
+
+            &.active {
+                background: $ink-dark;
+                color: #fff;
+                font-weight: 500;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            &:last-child {
+                margin-right: 40px;
+            }
+        }
+    }
+
+    .timeline-list {
+        padding: 40px;
+        padding-bottom: 80px;
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 40px;
+            position: relative;
+
+            &:last-child {
+                .time-node .line {
+                    display: none;
+                }
+            }
+
+            .time-node {
+                margin-right: 32px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 32px;
+                flex-shrink: 0;
+
+                .dot {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: $ink-dark;
+                    border: 4px solid #e5e7eb;
+                    margin-top: 10px;
+                    z-index: 2;
+                }
+
+                .line {
+                    width: 2px;
+                    flex: 1;
+                    min-height: 80px;
+                    background: #e5e7eb;
+                    margin-top: 4px;
+                }
+            }
+
+            .event-content {
+                flex: 1;
+                background: #fff;
+                padding: 32px;
+                border-radius: 20px;
+                border: 2px solid rgba($ink-dark, 0.05);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+
+                .event-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 16px;
+
+                    .event-year {
+                        font-size: 28px;
+                        font-weight: 600;
+                        color: $ink-dark;
+                        font-family: "Songti SC", serif;
+                        background: #f8f8f8;
+                        padding: 4px 12px;
+                        border-radius: 8px;
+                    }
+
+                    .event-type {
+                        font-size: 20px;
+                        color: $ink-light;
+                        border: 1px solid rgba($ink-light, 0.3);
+                        padding: 2px 8px;
+                        border-radius: 6px;
+                    }
+                }
+
+                .event-title {
+                    display: block;
+                    font-size: 30px;
+                    font-weight: bold;
+                    color: $ink-dark;
+                    line-height: 1.4;
+                    margin-bottom: 12px;
+                    font-family: "Songti SC", serif;
+                }
+
+                .event-desc {
+                    display: block;
+                    font-size: 26px;
+                    color: $ink-medium;
+                    line-height: 1.6;
+                    margin-bottom: 24px;
+                    text-align: justify;
+                }
+
+                .event-footer {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    padding-top: 16px;
+                    border-top: 1px solid #f0f0f0;
+
+                    .meta-row {
+                        display: flex;
+                        align-items: center;
+                        font-size: 22px;
+                        color: $ink-light;
+
+                        .meta-label {
+                            margin-right: 8px;
+                            font-size: 24px;
+                        }
+
+                        .meta-value {
+                            @include text-ellipsis-lines(1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .loading,
+    .error {
+        text-align: center;
+        padding: 60px;
+        color: $ink-light;
+        font-size: 28px;
+    }
+}

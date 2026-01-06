@@ -1,0 +1,219 @@
+@import '../../styles/theme.scss';
+
+.artifacts-page {
+  height: 100vh;
+  overflow: hidden;
+  background: $paper-white;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-content {
+  flex: 1;
+  min-height: 0; // Critical for scrolling
+  padding: $spacing-md $spacing-lg;
+  box-sizing: border-box;
+
+  .loading,
+  .no-results,
+  .loading-more {
+    text-align: center;
+    padding: 32px;
+    color: $ink-light;
+    font-size: 24px;
+    grid-column: 1 / -1;
+  }
+}
+
+.artifact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 40px;
+}
+
+.artifact-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  border: 2px solid rgba($ink-dark, 0.02);
+  transition: all 0.3s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+
+  // 神器特效
+  &.card-shenqi {
+    border-color: rgba(184, 134, 11, 0.3);
+    background: linear-gradient(135deg, #fff 0%, rgba(184, 134, 11, 0.03) 100%);
+    box-shadow: 0 8px 24px rgba(184, 134, 11, 0.08);
+
+    .item-name {
+      color: #8b6b18 !important;
+    }
+  }
+
+  .card-content-wrapper {
+    display: flex;
+    gap: 24px;
+  }
+
+  .artifact-icon {
+    width: 140px;
+    height: 140px;
+    border-radius: 12px;
+    background: #f5f5f5;
+    flex-shrink: 0;
+  }
+
+  .artifact-icon-placeholder {
+    width: 140px;
+    height: 140px;
+    border-radius: 12px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    flex-shrink: 0;
+  }
+
+  .card-right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; // 改为顶部对齐，防止换行问题
+    margin-bottom: 8px;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .shenqi-icon {
+      font-size: 32px;
+      animation: float 3s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    .item-name {
+      font-size: 34px;
+      font-weight: 600;
+      color: $ink-dark;
+      font-family: "Songti SC", serif;
+      line-height: 1.2;
+    }
+
+    .grade-tag {
+      font-size: 20px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 500;
+      line-height: 1.2;
+      flex-shrink: 0;
+      margin-left: 8px;
+
+      &.grade-shenqi {
+        background: rgba(184, 134, 11, 0.1);
+        color: #b8860b;
+      }
+
+      &.grade-xianbing {
+        background: rgba(156, 39, 176, 0.1);
+        color: #9c27b0;
+      }
+
+      &.grade-banxianbing {
+        background: rgba(156, 39, 176, 0.05);
+        color: #ba68c8;
+      }
+
+      &.grade-fabao {
+        background: rgba(33, 150, 243, 0.1);
+        color: #2196f3;
+      }
+
+      &.grade-lingqi {
+        background: rgba(76, 175, 80, 0.1);
+        color: #4caf50;
+      }
+
+      &.grade-normal {
+        background: rgba(158, 158, 158, 0.1);
+        color: #9e9e9e;
+      }
+    }
+  }
+
+  .item-desc {
+    font-size: 26px;
+    color: $ink-medium;
+    line-height: 1.5;
+    @include text-ellipsis-lines(2); // 图片挤占空间，减为2行
+  }
+
+  .card-footer {
+    border-top: 1px dashed rgba($ink-dark, 0.06);
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+
+      .label {
+        color: $ink-light;
+      }
+
+      .value {
+        color: $ink-dark;
+        font-weight: 500;
+        margin-left: 4px;
+        @include text-ellipsis;
+        max-width: 140px;
+      }
+    }
+
+    .status-item {
+      .value {
+        color: $ink-medium;
+      }
+    }
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}

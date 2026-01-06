@@ -1,0 +1,149 @@
+@import '../../styles/theme.scss';
+
+.map-page {
+    min-height: 100vh;
+    background: #f3f4f6;
+    padding: 32px;
+    padding-bottom: 60px;
+    box-sizing: border-box;
+
+    .header {
+        margin-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .title {
+            font-size: 56px;
+            font-weight: 600;
+            color: $ink-dark;
+            font-family: "Songti SC", serif;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 28px;
+            color: $ink-medium;
+            margin-bottom: 32px;
+        }
+
+        .location-btn {
+            background: $ink-dark;
+            color: #fff;
+            font-size: 28px;
+            padding: 0 40px;
+            height: 72px;
+            line-height: 72px;
+            border-radius: 36px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+
+            &:active {
+                opacity: 0.9;
+                transform: scale(0.98);
+            }
+        }
+    }
+
+    .map-card {
+        background: #fff;
+        border-radius: 24px;
+        overflow: hidden;
+        margin-bottom: 40px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        border: 2px solid rgba($ink-dark, 0.05);
+
+        .card-header {
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+
+            .card-title {
+                font-size: 32px;
+                font-weight: 600;
+                color: $ink-dark;
+                font-family: "Songti SC", serif;
+            }
+
+            .card-tag {
+                font-size: 22px;
+                color: $ink-light;
+                background: #f5f5f5;
+                padding: 6px 16px;
+                border-radius: 12px;
+            }
+        }
+
+        .map-image {
+            width: 100%;
+            display: block; // Remove inline-block gap
+        }
+
+        .card-hint {
+            display: block;
+            text-align: center;
+            padding: 16px;
+            font-size: 22px;
+            color: $ink-light;
+            background: #fafafa;
+            border-top: 2px solid #f0f0f0;
+        }
+    }
+}
+
+// Preview Overlay - Global Scope
+.preview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // Ensure it captures touches
+    pointer-events: auto;
+
+    .preview-movable-area {
+        width: 100vw;
+        height: 100vh;
+        background: black;
+    }
+
+    .preview-movable-view {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .preview-image {
+        width: 100%;
+        // height: auto handled by mode="widthFix"
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 80px; // Adjust for status bar safely
+        right: 40px;
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+
+        text {
+            color: #fff;
+            font-size: 40px;
+            line-height: 1;
+        }
+    }
+}

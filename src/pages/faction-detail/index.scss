@@ -1,0 +1,99 @@
+@import '../../styles/theme.scss';
+
+.detail-page {
+    height: 100vh;
+    background: $paper-white;
+}
+
+.loading-container,
+.error-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $ink-light;
+    font-size: 28px;
+}
+
+.detail-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 40px;
+    background: #fff;
+    border-bottom: 2px solid $ink-faint;
+
+    .header-icon {
+        font-size: 80px;
+        margin-bottom: 24px;
+        background: #f5f5f5;
+        width: 140px;
+        height: 140px;
+        border-radius: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid rgba($ink-dark, 0.05);
+    }
+
+    .detail-name {
+        font-size: 48px;
+        font-weight: bold;
+        color: $ink-dark;
+        font-family: "Songti SC", serif;
+        margin-bottom: 16px;
+    }
+
+    .detail-subtitle {
+        font-size: 28px;
+        color: $ink-medium;
+        padding: 6px 20px;
+        background: rgba($ink-medium, 0.1);
+        border-radius: 12px;
+    }
+}
+
+.detail-section {
+    padding: 40px;
+    border-bottom: 2px solid rgba($ink-dark, 0.03);
+
+    .section-title {
+        display: block;
+        font-size: 32px;
+        font-family: "Songti SC", serif;
+        font-weight: bold;
+        color: $ink-dark;
+        margin-bottom: 24px;
+        border-left: 6px solid $cinnabar;
+        padding-left: 16px;
+    }
+
+    .section-content {
+        .text-content {
+            font-size: 30px;
+            line-height: 1.8;
+            color: $ink-main;
+            text-align: justify;
+        }
+    }
+
+    .member-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        .member-tag {
+            font-size: 28px;
+            color: $indigo;
+            background: rgba($indigo, 0.05);
+            border: 2px solid rgba($indigo, 0.1);
+            padding: 12px 24px;
+            border-radius: 32px;
+            transition: all 0.2s;
+
+            &:active {
+                background: rgba($indigo, 0.15);
+            }
+        }
+    }
+}

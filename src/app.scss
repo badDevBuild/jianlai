@@ -1,0 +1,49 @@
+@import './styles/theme.scss';
+
+// 全局样式重置与设置
+page {
+    background-color: $paper-white;
+    color: $ink-main;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", serif; // 优先衬线感
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+
+    // 注入 CSS 变量以备 JS 动态使用 (如需)
+    --ink-dark: #{$ink-dark};
+    --color-primary: #{$indigo};
+}
+
+// 辅助类
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+// 遮罩层 z-index 规范
+$z-index-nav: 100;
+$z-index-mask: 90;
+$z-index-popup: 95;

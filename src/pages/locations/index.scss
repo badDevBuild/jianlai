@@ -1,0 +1,116 @@
+@import '../../styles/theme.scss';
+
+.locations-page {
+  height: 100vh;
+  overflow: hidden;
+  background: $paper-white;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-content {
+  flex: 1;
+  min-height: 0; // Critical for scrolling
+  padding: $spacing-md $spacing-lg;
+  box-sizing: border-box;
+
+  .loading,
+  .no-results,
+  .loading-more {
+    text-align: center;
+    padding: 32px;
+    color: $ink-light;
+    font-size: 24px;
+    grid-column: 1 / -1;
+  }
+}
+
+.location-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 40px;
+}
+
+.location-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px 24px; // 增加上下padding
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: flex-start; // 改为顶部对齐
+  border: 2px solid rgba($ink-dark, 0.02);
+  transition: all 0.3s ease;
+
+  &:active {
+    background: #fafafa;
+    transform: scale(0.99);
+  }
+
+  .card-left {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+    overflow: hidden;
+
+    .icon-wrap {
+      font-size: 56px; // 稍微调大图标
+      margin-right: 24px;
+      width: 72px;
+      text-align: center;
+      line-height: 1;
+      padding-top: 4px; // 微调对齐
+    }
+
+    .info-wrap {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 8px; // 增加间距
+
+      .name-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap; // 允许换行
+      }
+
+      .loc-name {
+        font-size: 34px;
+        font-weight: 600;
+        color: $ink-dark;
+        font-family: "Songti SC", serif;
+        line-height: 1.2;
+      }
+
+      .type-tag {
+        font-size: 20px;
+        color: $ink-medium;
+        background: rgba($ink-medium, 0.08);
+        padding: 4px 12px;
+        border-radius: 8px;
+        white-space: nowrap;
+        height: fit-content;
+      }
+
+      .loc-parent {
+        font-size: 24px;
+        color: $ink-medium;
+        background: rgba($bamboo, 0.05);
+        color: darken($bamboo, 10%);
+        padding: 4px 12px;
+        border-radius: 8px;
+        width: fit-content;
+      }
+
+      .loc-desc {
+        font-size: 26px;
+        color: $ink-light;
+        line-height: 1.5;
+        @include text-ellipsis-lines(2);
+        margin-top: 4px;
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+@import '../../styles/theme.scss';
+
+.filter-bar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 20px 24px; // Increased padding
+    background: rgba(255, 255, 255, 0.85); // Glassmorphism base
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba($ink-dark, 0.05); // Very faint border
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px; // Larger touch target
+        margin-right: 16px;
+        background: $paper-light;
+        border-radius: 40px; // Pill shape
+        border: 2px solid rgba($ink-dark, 0.1); // Ink outline
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+
+        &.active {
+            background: $ink-dark; // Solid ink block
+            border-color: $ink-dark;
+            transform: translateY(-2px); // Subtle lift
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+            .filter-text {
+                color: $paper-light;
+                font-weight: 500;
+            }
+        }
+
+        .filter-text {
+            font-size: $font-size-sm;
+            color: $ink-medium;
+            font-family: "Songti SC", serif; // Serif for traditional feel
+            transition: color 0.3s;
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        &:active {
+            transform: scale(0.96);
+        }
+    }
+
+    .filter-divider {
+        width: 2px;
+        height: 32px;
+        background: rgba($ink-dark, 0.1);
+        margin: 0 16px;
+        align-self: center;
+        flex-shrink: 0;
+        border-radius: 2px;
+    }
+}

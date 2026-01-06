@@ -1,0 +1,215 @@
+@import '../../styles/theme.scss';
+
+.search-page {
+    min-height: 100vh;
+    background: $paper-white;
+    display: flex;
+    flex-direction: column;
+}
+
+// 搜索栏 - 与其他页面统一
+.search-header {
+    padding: $spacing-md $spacing-lg;
+    background: #fff;
+    border-bottom: 2px solid rgba($ink-dark, 0.05);
+    display: flex; // Add flex container
+    align-items: center;
+
+    .search-input-wrap {
+        flex: 1; // Take remaining space
+        display: flex;
+        align-items: center;
+        background: #f3f4f6;
+        border-radius: 32px;
+        padding: 16px 24px;
+
+        .search-icon {
+            font-size: 32px;
+            margin-right: 16px;
+            opacity: 0.8;
+        }
+
+        .search-input {
+            flex: 1;
+            font-size: 28px;
+            color: $ink-main;
+            background: transparent;
+            height: 40px;
+        }
+
+        .clear-btn {
+            font-size: 32px;
+            color: $ink-light;
+            padding: 8px;
+        }
+    }
+
+    .header-action {
+        margin-left: 24px;
+        font-size: 30px;
+        color: $ink-medium;
+        flex-shrink: 0;
+        padding: 8px 0; // Enhance click area
+    }
+}
+
+
+// 筛选标签栏
+.filter-tabs {
+    display: flex;
+    padding: 0 32px 16px;
+    background: #fff;
+    border-bottom: 2px solid rgba($ink-dark, 0.05);
+    margin-bottom: 8px;
+
+    .filter-tab {
+        font-size: 28px;
+        color: $ink-medium;
+        padding: 12px 24px;
+        border-radius: 32px;
+        margin-right: 16px;
+        background: #f8f8f8;
+        transition: all 0.2s;
+
+        &.active {
+            background: $ink-dark; // 选中深色背景
+            color: #fff;
+            font-weight: 500;
+        }
+    }
+}
+
+// 搜索列表
+.search-results {
+    flex: 1;
+    padding: 24px 40px;
+    box-sizing: border-box;
+
+    .result-item {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border-radius: 20px;
+        padding: 24px 32px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        border: 2px solid rgba($ink-dark, 0.02);
+
+        &:active {
+            background: #fafafa;
+        }
+
+        .result-avatar-wrap {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            border: 2px solid #e5e5e5;
+            padding: 2px;
+            margin-right: 32px;
+
+            .result-avatar {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                background: #f0f0f0;
+            }
+        }
+
+        .result-icon-wrap {
+            width: 96px;
+            height: 96px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 32px;
+            background: #f8f9fa;
+
+            .result-icon {
+                font-size: 48px;
+            }
+
+            &.type-item {
+                background: #fffbeb;
+                color: #d97706;
+            }
+
+            &.type-faction {
+                background: #eff6ff;
+                color: #2563eb;
+            }
+
+            &.type-location {
+                background: #f0fdf4;
+                color: #16a34a;
+            }
+        }
+
+        .result-info {
+            flex: 1;
+
+            .result-name {
+                display: block;
+                font-size: 32px;
+                font-weight: 600;
+                color: $ink-dark;
+                font-family: "Songti SC", serif;
+                margin-bottom: 8px;
+            }
+
+            .result-type {
+                display: block;
+                font-size: 22px;
+                color: $ink-light;
+            }
+        }
+
+        .result-arrow {
+            font-size: 32px;
+            color: $ink-light;
+            opacity: 0.5;
+        }
+
+    }
+}
+
+// 热门搜索
+.search-suggestions {
+    padding: 40px;
+
+    .suggestion-title {
+        display: block;
+        font-size: 28px;
+        font-weight: bold;
+        color: $ink-medium;
+        margin-bottom: 24px;
+    }
+
+    .suggestion-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        .suggestion-tag {
+            padding: 12px 32px;
+            background: #fff;
+            border-radius: 32px;
+            font-size: 28px;
+            color: $ink-dark;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 2px solid rgba($ink-dark, 0.02);
+
+            &:active {
+                background: #f0f0f0;
+            }
+        }
+    }
+}
+
+.loading,
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: $ink-light;
+    font-size: 28px;
+}

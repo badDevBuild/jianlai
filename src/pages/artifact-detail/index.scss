@@ -1,0 +1,174 @@
+@import '../../styles/theme.scss';
+
+.detail-page {
+  height: 100vh;
+  background: $paper-white;
+}
+
+.loading-container,
+.error-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $ink-light;
+  font-size: 28px;
+}
+
+.detail-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 40px;
+  background: #fff;
+  border-bottom: 2px solid $ink-faint;
+
+  .header-icon {
+    font-size: 80px;
+    margin-bottom: 24px;
+    background: transparent; // Changed from #f5f5f5 to transparent for ink wash images
+    width: 200px; // Increased size
+    height: 200px;
+    border-radius: 0; // Removed circle
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none; // Removed border
+
+    .item-image {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .detail-name {
+    font-size: 48px;
+    font-weight: bold;
+    color: $ink-dark;
+    font-family: "Songti SC", serif;
+    margin-bottom: 20px;
+  }
+
+  .grade-pill {
+    font-size: 28px;
+    padding: 8px 24px;
+    border-radius: 32px;
+    font-weight: 500;
+
+    &.grade-shenqi {
+      background: rgba(184, 134, 11, 0.1);
+      color: #b8860b;
+    }
+
+    &.grade-xianbing {
+      background: rgba(156, 39, 176, 0.1);
+      color: #9c27b0;
+    }
+
+    &.grade-banxianbing {
+      background: rgba(156, 39, 176, 0.05);
+      color: #ba68c8;
+    }
+
+    &.grade-fabao {
+      background: rgba(33, 150, 243, 0.1);
+      color: #2196f3;
+    }
+
+    &.grade-lingqi {
+      background: rgba(76, 175, 80, 0.1);
+      color: #4caf50;
+    }
+
+    &.grade-normal {
+      background: rgba(158, 158, 158, 0.1);
+      color: #9e9e9e;
+    }
+  }
+}
+
+.detail-section {
+  padding: 40px;
+  border-bottom: 2px solid rgba($ink-dark, 0.03);
+
+  .section-title {
+    display: block;
+    font-size: 32px;
+    font-family: "Songti SC", serif;
+    font-weight: bold;
+    color: $ink-dark;
+    margin-bottom: 32px;
+    border-left: 6px solid $cinnabar;
+    padding-left: 16px;
+  }
+
+  .section-content {
+    .text-content {
+      font-size: 30px;
+      line-height: 1.8;
+      color: $ink-main;
+      text-align: justify;
+    }
+  }
+}
+
+// Timeline styles
+.timeline-list {
+  position: relative;
+  padding-left: 16px;
+
+  &:before {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 24px;
+    bottom: 24px;
+    width: 4px;
+    background: $ink-faint;
+    border-radius: 2px;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-left: 60px;
+    margin-bottom: 32px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 12px;
+      top: 24px;
+      width: 24px;
+      height: 24px;
+      background: $indigo;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      box-shadow: 0 0 0 2px $indigo;
+      z-index: 2;
+    }
+
+    .timeline-content {
+      background: #f9f9f9;
+      padding: 24px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(0, 0, 0, 0.02);
+
+      .owner-name {
+        font-size: 30px;
+        font-weight: 600;
+        color: $indigo;
+        margin-bottom: 8px;
+      }
+
+      .chapter-ref {
+        font-size: 24px;
+        color: $ink-light;
+      }
+    }
+  }
+}
