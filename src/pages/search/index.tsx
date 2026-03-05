@@ -1,7 +1,8 @@
 import { View, Text, Input, ScrollView, Image } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useState, useMemo } from 'react';
-import { useSearch, getAvatar, useCharacters } from '../../data/useData';
+import { useSearch, getAvatar, getItemIcon, useCharacters, useItems } from '../../data/useData';
+import { useAppShare } from '../../utils/share';
 import './index.scss';
 
 // 类型图标映射
@@ -34,7 +35,9 @@ const FILTERS = [
 
 export default function SearchPage() {
     const { search, loading } = useSearch();
-    const { characterList } = useCharacters(); // Use for fast avatar lookup if needed, though getAvatar handles most.
+    useAppShare({ title: '剑来光阴 - 百科搜索', path: '/pages/search/index' });
+    const { characterList } = useCharacters();
+    const { itemList } = useItems();
 
     const [query, setQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState('all');
@@ -120,7 +123,17 @@ export default function SearchPage() {
                     ) : filteredResults.length > 0 ? (
                         filteredResults.map((item, idx) => {
                             const isCharacter = item.type === 'character';
-                            const avatarUrl = isCharacter ? getAvatar({ name: item.id } as any) : '';
+                            const isItem = item.type === 'item';
+
+                            let imageUrl = '';
+                            if (isCharacter) {
+                                const realChar = characterList.find(c => c.name === item.id);
+                                // If found real char, use it, else fallback to shell
+                                imageUrl = getAvatar(realChar || { name: item.id } as any);
+                            } else if (isItem) {
+                                const realItem = itemList.find(i => i.name === item.id);
+                                imageUrl = getItemIcon(realItem || { name: item.id } as any);
+                            }
 
                             return (
                                 <View
@@ -128,9 +141,9 @@ export default function SearchPage() {
                                     className="result-item"
                                     onClick={() => handleResultClick(item)}
                                 >
-                                    {isCharacter ? (
+                                    {isCharacter || isItem ? (
                                         <View className="result-avatar-wrap">
-                                            <Image className="result-avatar" src={avatarUrl} mode="aspectFill" />
+                                            <Image className="result-avatar" src={imageUrl} mode="aspectFill" />
                                         </View>
                                     ) : (
                                         <View className={`result-icon-wrap type-${item.type}`}>

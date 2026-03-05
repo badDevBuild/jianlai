@@ -1,7 +1,8 @@
 import { View, Text, ScrollView, Image } from '@tarojs/components';
 import Taro, { useLoad } from '@tarojs/taro';
 import { useState } from 'react';
-import { useTopCharacters, useRandomQuote, getAvatar } from '../../data/useData';
+import { useTopCharacters, useRandomQuote, getAvatar, preloadAllData } from '../../data/useData';
+import { useAppShare } from '../../utils/share';
 import './index.scss';
 
 // 背景图使用远程 URL
@@ -26,8 +27,9 @@ const STATS = {
 };
 
 export default function Index() {
+  useAppShare();
   const { characterList, loading } = useTopCharacters();
-  const { quotes: randomQuotes, loading: quotesLoading } = useRandomQuote();
+  const { quotes: randomQuotes } = useRandomQuote();
 
   // 每日金句交互状态
   const [quoteIndex, setQuoteIndex] = useState(0);
@@ -54,24 +56,24 @@ export default function Index() {
         // 简单估算导航栏高度：胶囊底部 + 16px padding
         setNavBarHeight(menuButton.bottom + 16);
       }
+
+      // 启动静默预加载
+      preloadAllData();
+
     } catch (e) {
       console.error('获取胶囊位置失败', e);
     }
   });
 
   const categories = [
-    { name: '宗派势力', count: `${STATS.factions} 个势力`, icon: '⛩️', path: '/pages/factions/index', color: '#eef2ff', iconColor: '#6366f1' },
-    { name: '宝物图鉴', count: `${STATS.items} 件物品`, icon: '✨', path: '/pages/artifacts/index', color: '#fdf4ff', iconColor: '#d946ef' },
-    { name: '地点图鉴', count: `${STATS.locations} 个地点`, icon: '📍', path: '/pages/locations/index', color: '#f0fdf4', iconColor: '#22c55e' },
-    { name: '关系图谱', count: STATS.relations, icon: '🕸️', path: '/pages/graph/index', color: '#fff7ed', iconColor: '#f97316' }, // graph 暂未实现，可先跳占位或 characters
+    { name: '宗派势力', count: `${STATS.factions} 个势力`, icon: '🏔️', path: '/pages/factions/index', color: '#eef2ff', iconColor: '#6366f1' },
+    { name: '宝物图鉴', count: `${STATS.items} 件物品`, icon: '🗡️', path: '/pages/artifacts/index', color: '#fdf4ff', iconColor: '#d946ef' },
+    { name: '地点图鉴', count: `${STATS.locations} 个地点`, icon: '🗺️', path: '/pages/locations/index', color: '#f0fdf4', iconColor: '#22c55e' },
+    { name: '世界观', count: '宏大设定', icon: '📜', path: '/pages/world/index', color: '#fff7ed', iconColor: '#f97316' },
   ];
 
   const handleCategoryClick = (path: string) => {
-    if (path === '/pages/graph/index') {
-      Taro.switchTab({ url: path });
-    } else {
-      Taro.navigateTo({ url: path });
-    }
+    Taro.navigateTo({ url: path });
   };
 
   const handleSearchClick = () => {
@@ -125,7 +127,7 @@ export default function Index() {
                 {characterList.map((char, index) => (
                   <View
                     key={char.name}
-                    className={`character-card ${index === 3 ? 'active' : ''}`} // 模拟选中态(崔没)
+                    className="character-card"
                     onClick={() => Taro.navigateTo({ url: `/pages/character-detail/index?name=${encodeURIComponent(char.name)}` })}
                   >
                     <View className="avatar-wrapper">
@@ -141,7 +143,7 @@ export default function Index() {
 
           {/* 功能入口 Grid */}
           <View className="grid-container">
-            {categories.map((cat, index) => (
+            {categories.map((cat) => (
               <View
                 key={cat.name}
                 className="grid-card"

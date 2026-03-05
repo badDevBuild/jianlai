@@ -12,5 +12,6 @@
     "minified": true
   },
   "compileType": "miniprogram",
-  "lazyCodeLoading": "requiredComponents"
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
 }

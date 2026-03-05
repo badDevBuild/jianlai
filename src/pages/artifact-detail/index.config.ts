@@ -1,3 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '页面'
+  navigationBarTitleText: '剑来法宝',
+  enableShareAppMessage: true,
+  enableShareTimeline: true,
 })

@@ -1,3 +1,5 @@
 export default definePageConfig({
-    navigationBarTitleText: '人物详情'
+    navigationBarTitleText: '剑来人物',
+    enableShareAppMessage: true,
+    enableShareTimeline: true,
 })

@@ -1,3 +1,5 @@
 export default definePageConfig({
-    navigationBarTitleText: '宗派详情'
+    navigationBarTitleText: '剑来宗门',
+    enableShareAppMessage: true,
+    enableShareTimeline: true,
 })

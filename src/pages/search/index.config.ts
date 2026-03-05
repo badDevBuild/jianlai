@@ -1,3 +1,5 @@
 export default definePageConfig({
-    navigationBarTitleText: '搜索'
+    navigationBarTitleText: '剑来百科搜索',
+    enableShareAppMessage: true,
+    enableShareTimeline: true,
 })

@@ -2,16 +2,22 @@ import { View, Text, ScrollView } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
 import { useEffect } from 'react';
 import { useFaction } from '../../data/useData';
+import { useAppShare } from '../../utils/share';
+import UgcEntry from '../../components/UgcEntry';
 import './index.scss';
 
 export default function FactionDetail() {
     const router = useRouter();
     const name = decodeURIComponent(router.params.name || '');
     const { faction, loading, error } = useFaction(name);
+    useAppShare({
+        title: `【剑来·宗门】${name}`,
+        path: `/pages/faction-detail/index?name=${encodeURIComponent(name)}`
+    });
 
     useEffect(() => {
         if (faction) {
-            Taro.setNavigationBarTitle({ title: faction.name });
+            Taro.setNavigationBarTitle({ title: `${faction.name} - 剑来势力` });
         }
     }, [faction]);
 
@@ -30,17 +36,22 @@ export default function FactionDetail() {
 
             {faction.description && (
                 <View className="detail-section">
-                    <Text className="section-title">简介</Text>
+                    <View className="section-header-row">
+                        <Text className="section-title">简介</Text>
+                    </View>
                     <View className="section-content">
                         <Text className="text-content">{faction.description}</Text>
                     </View>
+                    <View className="ugc-footer-wrap"><UgcEntry entryName={faction.name} entryType="势力" field="description" /></View>
                 </View>
             )}
 
             {/* 成员列表 - 重点 */}
             {(faction.members && faction.members.length > 0) && (
                 <View className="detail-section">
-                    <Text className="section-title">门下成员 ({faction.members.length})</Text>
+                    <View className="section-header-row">
+                        <Text className="section-title">门下成员 ({faction.members.length})</Text>
+                    </View>
                     <View className="member-list">
                         {faction.members.map(memberName => (
                             <View
@@ -52,6 +63,7 @@ export default function FactionDetail() {
                             </View>
                         ))}
                     </View>
+                    <View className="ugc-footer-wrap"><UgcEntry entryName={faction.name} entryType="势力" field="members" /></View>
                 </View>
             )}
         </ScrollView>

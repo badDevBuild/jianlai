@@ -1,37 +1,23 @@
 import { View, Text, ScrollView, Image } from '@tarojs/components';
 import Taro, { useLoad } from '@tarojs/taro';
 import { useMemo, useState } from 'react';
-import { useCharacters, getAvatar } from '../../data/useData';
+import { useQuotes, getAvatar } from '../../data/useData';
+import { useAppShare } from '../../utils/share';
 import './index.scss';
 
 const PAGE_SIZE = 10;
 
 export default function QuotesPage() {
-  const { characterList, loading } = useCharacters();
+  const { quotes: allQuotes, loading } = useQuotes();
+  useAppShare({ title: '剑来光阴 - 经典语录', path: '/pages/quotes/index' });
   const [page, setPage] = useState(1);
 
   useLoad(() => {
-    Taro.setNavigationBarTitle({ title: '经典语录' });
+    Taro.setNavigationBarTitle({ title: '剑来经典语录' });
   });
 
-  // 聚合打乱所有语录
-  const allQuotes = useMemo(() => {
-    if (!characterList) return [];
-    const list: any[] = [];
-    characterList.forEach(char => {
-      if (char.quotes) {
-        char.quotes.forEach(q => {
-          list.push({
-            ...q,
-            author: char.name,
-            avatar: getAvatar(char)
-          });
-        });
-      }
-    });
-    // 简单随机洗牌
-    return list.sort(() => 0.5 - Math.random());
-  }, [characterList]);
+  // allQuotes is already shuffled by the hook
+
 
   const displayList = useMemo(() => {
     return allQuotes.slice(0, page * PAGE_SIZE);

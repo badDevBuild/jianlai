@@ -2,27 +2,68 @@ import { View, Text, ScrollView, Image } from '@tarojs/components';
 import Taro, { useLoad } from '@tarojs/taro';
 import { useState, useMemo } from 'react';
 import { useItems, getItemIcon } from '../../data/useData';
+import { useAppShare } from '../../utils/share';
+import FilterBar from '../../components/FilterBar';
 import './index.scss';
 
 const PAGE_SIZE = 20;
 
 export default function ArtifactList() {
   const { itemList, loading } = useItems();
+  useAppShare({ title: '剑来光阴 - 法宝图鉴', path: '/pages/artifacts/index' });
   const [page, setPage] = useState(1);
+  const [selectedGrades, setSelectedGrades] = useState<string[]>([]);
 
   useLoad(() => {
-    Taro.setNavigationBarTitle({ title: '法宝图鉴' });
+    Taro.setNavigationBarTitle({ title: '剑来法宝图鉴' });
   });
 
-  const displayList = useMemo(() => {
+  // 1. 定义固定 Filter 选项
+  const FILTER_OPTIONS = ['全部', '神器', '仙兵', '半仙兵', '法宝', '灵器', '其他'];
+
+  // 2. 过滤逻辑
+  const filteredList = useMemo(() => {
     if (!itemList) return [];
-    return itemList.slice(0, page * PAGE_SIZE);
-  }, [itemList, page]);
+    if (selectedGrades.length === 0 || selectedGrades.includes('全部')) return itemList;
+
+    return itemList.filter(item => {
+      const type = item.grade || '其他';
+      if (selectedGrades.includes(type)) return true;
+      if (selectedGrades.includes('其他') && !['神器', '仙兵', '半仙兵', '法宝', '灵器'].includes(type)) return true;
+      return false;
+    });
+  }, [itemList, selectedGrades]);
+
+  // 3. 分页逻辑
+  const displayList = useMemo(() => {
+    return filteredList.slice(0, page * PAGE_SIZE);
+  }, [filteredList, page]);
 
   const handleScrollToLower = () => {
-    if (itemList && displayList.length < itemList.length) {
+    if (displayList.length < filteredList.length) {
       setPage(prev => prev + 1);
     }
+  };
+
+  const handleToggleGrade = (grade: string) => {
+    setPage(1);
+    if (grade === '全部') {
+      setSelectedGrades([]);
+      return;
+    }
+
+    setSelectedGrades(prev => {
+      // 既然 UI 上有 "全部"按钮，这里逻辑可以是：如果选了全部，清空；否则单选/多选
+      // 这里采用单选切换逻辑，或者多选。 Design Brief 没详说，但 FilterBar 支持多选。
+      // 鉴于 FilterBar UI，我们让 "全部" 只是重置状态。
+      if (prev.includes(grade)) return prev.filter(g => g !== grade);
+      return [grade]; // 暂定单选，体验更清晰
+    });
+  };
+
+  const handleResetFilter = () => {
+    setPage(1);
+    setSelectedGrades([]);
   };
 
   const getGradeClass = (grade: string) => {
@@ -34,15 +75,20 @@ export default function ArtifactList() {
     return 'grade-normal';
   };
 
-  const getOwner = (item: any) => {
-    if (item.ownership_log && item.ownership_log.length > 0) {
-      return item.ownership_log[item.ownership_log.length - 1].owner;
-    }
-    return null;
-  };
+  // getOwner helper removed, use item.current_owner directly
 
   return (
     <View className="artifacts-page">
+      {/* 顶部筛选栏 */}
+      <View className="filter-container">
+        <FilterBar
+          items={FILTER_OPTIONS.slice(1)} // 去掉全部，因为 FilterBar 内部有全部按钮
+          selectedItems={selectedGrades}
+          onToggle={handleToggleGrade}
+          onReset={handleResetFilter}
+        />
+      </View>
+
       <ScrollView
         scrollY
         className="list-content"
@@ -56,7 +102,6 @@ export default function ArtifactList() {
         ) : displayList.length > 0 ? (
           <View className="artifact-list">
             {displayList.map((item) => {
-              const currentOwner = getOwner(item);
               const isShenqi = item.grade === '神器';
               const iconUrl = getItemIcon(item);
 
@@ -91,10 +136,10 @@ export default function ArtifactList() {
                       </View>
 
                       <View className="card-footer">
-                        {currentOwner ? (
+                        {item.current_owner ? (
                           <View className="info-item">
                             <Text className="label">持有：</Text>
-                            <Text className="value">{currentOwner}</Text>
+                            <Text className="value">{item.current_owner}</Text>
                           </View>
                         ) : <View />}
 
@@ -113,11 +158,11 @@ export default function ArtifactList() {
           </View>
         ) : (
           <View className="no-results">
-            <Text>暂无法宝数据</Text>
+            <Text>暂无相关法宝</Text>
           </View>
         )}
 
-        {displayList.length > 0 && itemList && displayList.length < itemList.length && (
+        {displayList.length > 0 && displayList.length < filteredList.length && (
           <View className="loading-more">
             <Text>加载更多...</Text>
           </View>
