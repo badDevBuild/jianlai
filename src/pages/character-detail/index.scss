@@ -613,36 +613,22 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
     }
 }
 
-// Generate Card Section
-.generate-card-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px;
+// Share Card Button (inside detail-header)
+.action-card-btn {
+    align-self: flex-end;
+    margin-top: 24px;
+    padding: 8px 20px;
+    border: 1px solid rgba($ink-light, 0.2);
+    border-radius: 8px;
+    color: $ink-light;
+    font-size: 22px;
 
-    .generate-card-btn {
-        width: 80%;
-        height: 88px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, $indigo, darken($indigo, 8%));
-        color: #fff;
-        font-size: 30px;
-        font-weight: 500;
-        border-radius: 44px;
-        letter-spacing: 2px;
-
-        &.disabled {
-            opacity: 0.6;
-        }
+    &:active {
+        background: rgba($ink-dark, 0.05);
     }
 
-    .generate-card-hint {
-        display: block;
-        margin-top: 16px;
-        font-size: 22px;
-        color: $ink-light;
+    &.disabled {
+        opacity: 0.5;
     }
 }
 

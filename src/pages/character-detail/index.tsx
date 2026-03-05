@@ -444,6 +444,13 @@ export default function CharacterDetail() {
                         </View>
                     )}
                 </View>
+
+                <View
+                    className={`action-card-btn ${generating ? 'disabled' : ''}`}
+                    onClick={handleGenerateCard}
+                >
+                    <Text>{generating ? '生成中...' : '分享此人物卡片'}</Text>
+                </View>
             </View>
 
 
@@ -672,17 +679,6 @@ export default function CharacterDetail() {
             }
 
             {/*移除了全局 UgcEntry*/}
-
-            {/* Generate Card Button */}
-            <View className="generate-card-section">
-                <View
-                    className={`generate-card-btn ${generating ? 'disabled' : ''}`}
-                    onClick={handleGenerateCard}
-                >
-                    <Text>{generating ? '生成中...' : '生成人物卡片'}</Text>
-                </View>
-                <Text className="generate-card-hint">保存卡片分享给好友</Text>
-            </View>
 
             <View className="bottom-spacer" />
         </ScrollView >

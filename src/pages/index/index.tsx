@@ -1,8 +1,9 @@
-import { View, Text, ScrollView, Image } from '@tarojs/components';
+import { View, Text, ScrollView, Image, Canvas } from '@tarojs/components';
 import Taro, { useLoad } from '@tarojs/taro';
 import { useState } from 'react';
 import { useTopCharacters, useRandomQuote, getAvatar, preloadAllData } from '../../data/useData';
 import { useAppShare } from '../../utils/share';
+import { generateQuoteCard } from '../../utils/quoteCardGenerator';
 import './index.scss';
 
 // 背景图使用远程 URL
@@ -33,6 +34,10 @@ export default function Index() {
 
   // 每日金句交互状态
   const [quoteIndex, setQuoteIndex] = useState(0);
+  // 金句卡片生成
+  const [showQuoteCard, setShowQuoteCard] = useState(false);
+  const [quoteCardPath, setQuoteCardPath] = useState('');
+  const [generatingQuote, setGeneratingQuote] = useState(false);
 
   // 优先使用随机金句，加载中或无数据时使用默认
   const displayQuotes = (randomQuotes && randomQuotes.length > 0) ? randomQuotes : DEFAULT_QUOTES;
@@ -86,12 +91,88 @@ export default function Index() {
   };
 
   const handleMoreQuotes = (e) => {
-    e.stopPropagation(); // 阻止冒泡，避免触发切金句
+    e.stopPropagation();
     Taro.navigateTo({ url: '/pages/quotes/index' });
+  };
+
+  const handleShareQuote = () => {
+    if (generatingQuote) return;
+    setGeneratingQuote(true);
+    const query = Taro.createSelectorQuery();
+    query.select('#quoteCanvas')
+      .fields({ node: true, size: true })
+      .exec(async (res) => {
+        try {
+          const canvasNode = res[0]?.node;
+          if (!canvasNode) {
+            Taro.showToast({ title: '画布初始化失败', icon: 'none' });
+            setGeneratingQuote(false);
+            return;
+          }
+          const dpr = Taro.getSystemInfoSync().pixelRatio;
+          const tempPath = await generateQuoteCard(
+            canvasNode,
+            { content: dailyQuote.content, author: dailyQuote.author },
+            currentBg,
+            dpr
+          );
+          setQuoteCardPath(tempPath);
+          setShowQuoteCard(true);
+        } catch (err) {
+          console.error('Quote card generation failed:', err);
+          Taro.showToast({ title: '生成失败', icon: 'none' });
+        } finally {
+          setGeneratingQuote(false);
+        }
+      });
+  };
+
+  const handleSaveQuoteCard = () => {
+    if (!quoteCardPath) return;
+    Taro.saveImageToPhotosAlbum({
+      filePath: quoteCardPath,
+      success: () => Taro.showToast({ title: '已保存到相册', icon: 'success' }),
+      fail: (err) => {
+        if (err.errMsg?.includes('deny') || err.errMsg?.includes('auth')) {
+          Taro.showModal({
+            title: '需要相册权限',
+            content: '请在设置中开启相册访问权限',
+            confirmText: '去设置',
+            success: (r) => { if (r.confirm) Taro.openSetting(); }
+          });
+        } else {
+          Taro.showToast({ title: '保存失败', icon: 'none' });
+        }
+      }
+    });
   };
 
   return (
     <View className="index-page">
+      {/* Hidden Canvas for quote card */}
+      <Canvas
+        type="2d"
+        id="quoteCanvas"
+        style={{ width: '750px', height: '1000px', position: 'fixed', left: '-9999px', top: 0 }}
+      />
+
+      {/* Quote Card Preview Modal */}
+      {showQuoteCard && quoteCardPath && (
+        <View className="card-preview-modal" onClick={() => setShowQuoteCard(false)}>
+          <View className="card-preview-content" onClick={e => e.stopPropagation()}>
+            <Image className="card-preview-image" src={quoteCardPath} mode="widthFix" />
+            <View className="card-preview-actions">
+              <View className="card-action-btn save-btn" onClick={handleSaveQuoteCard}>
+                <Text>保存到相册</Text>
+              </View>
+              <View className="card-action-btn close-btn" onClick={() => setShowQuoteCard(false)}>
+                <Text>关闭</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
+
       {/* 沉浸式 Header 区 */}
       <View className="custom-header" style={{ paddingTop: `${capsulePos.top}px`, height: `${capsulePos.height}px` }}>
         <View className="header-content">
@@ -182,9 +263,12 @@ export default function Index() {
                 </View>
               </View>
 
-              <View className="quote-actions" onClick={handleMoreQuotes}>
-                <Text className="action-text">点击查看更多金句</Text>
-                <View className="action-btn">→</View>
+              <View className="quote-actions">
+                <Text className="action-share" onClick={(e) => { e.stopPropagation(); handleShareQuote(); }}>{generatingQuote ? '生成中...' : '分享此金句'}</Text>
+                <View className="action-right" onClick={handleMoreQuotes}>
+                  <Text className="action-text">查看更多金句</Text>
+                  <View className="action-btn">→</View>
+                </View>
               </View>
             </View>
           </View>
