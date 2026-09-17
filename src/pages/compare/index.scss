@@ -1,0 +1,443 @@
+@import '../../styles/theme.scss';
+
+.compare-page {
+  height: 100vh;
+  background: $paper-white;
+  display: flex;
+  flex-direction: column;
+}
+
+.compare-page-search {
+  background: $paper-white;
+  min-height: 100vh;
+}
+
+.compare-scroll {
+  flex: 1;
+}
+
+// ─── Search mode ───
+.search-header {
+  display: flex;
+  align-items: center;
+  padding: 24px 32px;
+  gap: 16px;
+  flex-shrink: 0;
+
+  .search-input-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: $paper-light;
+    border-radius: $border-radius-round;
+    padding: 0 24px;
+    height: 80px;
+    border: 1px solid $ink-faint;
+    gap: 12px;
+
+    .search-input {
+      flex: 1;
+      font-size: 28px;
+      color: $ink-main;
+    }
+
+    .clear-btn {
+      padding: 8px;
+    }
+  }
+
+  .cancel-btn {
+    font-size: 28px;
+    color: $indigo;
+    flex-shrink: 0;
+  }
+}
+
+.search-results-list {
+  padding: 0 32px;
+
+  .search-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba($ink-dark, 0.04);
+
+    &:active {
+      background: rgba($ink-dark, 0.03);
+    }
+
+    .search-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 36px;
+      margin-right: 20px;
+      background: $paper-light;
+      flex-shrink: 0;
+    }
+
+    .search-info {
+      display: flex;
+      flex-direction: column;
+
+      .search-name {
+        font-size: 30px;
+        color: $ink-dark;
+        font-weight: 500;
+      }
+
+      .search-alias {
+        font-size: 22px;
+        color: $ink-light;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  .search-empty {
+    text-align: center;
+    padding: 48px 0;
+    color: $ink-light;
+    font-size: 26px;
+  }
+}
+
+// ─── Compare header ───
+.compare-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 32px 24px;
+  position: relative;
+
+  .char-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .char-avatar {
+      width: 180px;
+      height: 180px;
+      border-radius: 90px;
+      border: 3px solid $ink-faint;
+      background: $paper-light;
+    }
+
+    .char-name {
+      font-size: 32px;
+      font-weight: 600;
+      color: $ink-dark;
+      margin-top: 16px;
+      font-family: "Songti SC", serif;
+    }
+
+    .char-alias {
+      font-size: 22px;
+      color: $ink-light;
+      margin-top: 4px;
+    }
+
+    .change-btn {
+      font-size: 22px;
+      color: $indigo;
+      margin-top: 8px;
+    }
+  }
+
+  .char-placeholder {
+    width: 180px;
+    height: 180px;
+    border-radius: 90px;
+    border: 3px dashed $ink-faint;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba($ink-dark, 0.02);
+
+    .placeholder-text {
+      font-size: 22px;
+      color: $ink-light;
+      margin-top: 8px;
+    }
+  }
+
+  .vs-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    background: rgba($indigo, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -16px;
+
+    .vs-text {
+      font-size: 28px;
+      font-weight: bold;
+      color: $indigo;
+    }
+  }
+}
+
+// ─── Compare body ───
+.compare-body {
+  padding: 0 32px;
+}
+
+// Shared section label
+.section-label {
+  width: 120px;
+  text-align: center;
+  font-size: 22px;
+  color: $ink-light;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-size: 24px;
+  color: $ink-medium;
+  font-weight: 500;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: "Songti SC", serif;
+}
+
+// Tags
+.tags-section {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba($ink-dark, 0.04);
+
+  .tags-col {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .tag-pill {
+    font-size: 20px;
+    color: $ink-medium;
+    padding: 4px 16px;
+    border-radius: 20px;
+    border: 1px solid $ink-faint;
+    background: rgba($ink-dark, 0.02);
+    white-space: nowrap;
+  }
+}
+
+// Comparison rows
+.compare-row {
+  display: flex;
+  align-items: center;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba($ink-dark, 0.04);
+
+  .row-left,
+  .row-right {
+    flex: 1;
+    text-align: center;
+    font-size: 26px;
+    color: $ink-main;
+  }
+
+  .row-label {
+    width: 120px;
+    text-align: center;
+    font-size: 22px;
+    color: $ink-light;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+}
+
+// Techniques
+.techniques-section {
+  display: flex;
+  align-items: flex-start;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba($ink-dark, 0.04);
+
+  .tech-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tech-name {
+    font-size: 24px;
+    color: $ink-main;
+    font-family: "Songti SC", serif;
+  }
+}
+
+// Mutual relations
+.mutual-section {
+  padding: 24px 0;
+  border-bottom: 1px solid rgba($ink-dark, 0.04);
+
+  .mutual-label {
+    font-size: 22px;
+    color: $ink-light;
+    text-align: center;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .mutual-names {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .mutual-name {
+    font-size: 24px;
+    color: $indigo;
+    padding: 6px 20px;
+    border-radius: 20px;
+    background: rgba($indigo, 0.06);
+
+    &:active {
+      background: rgba($indigo, 0.12);
+    }
+  }
+}
+
+// Quotes
+.quotes-section {
+  padding: 32px 0 24px;
+  border-bottom: 1px solid rgba($ink-dark, 0.04);
+
+  .quotes-pair {
+    display: flex;
+    gap: 24px;
+  }
+
+  .quote-col {
+    flex: 1;
+
+    .quote-text {
+      font-size: 24px;
+      line-height: 1.7;
+      color: $ink-medium;
+      font-family: "Songti SC", serif;
+      text-align: center;
+      display: block;
+    }
+  }
+}
+
+// Bio
+.bio-section {
+  padding: 32px 0 24px;
+
+  .bio-pair {
+    display: flex;
+    gap: 24px;
+  }
+
+  .bio-col {
+    flex: 1;
+
+    .bio-name {
+      font-size: 24px;
+      font-weight: 600;
+      color: $ink-dark;
+      display: block;
+      text-align: center;
+      margin-bottom: 12px;
+      font-family: "Songti SC", serif;
+    }
+
+    .bio-text {
+      font-size: 22px;
+      line-height: 1.7;
+      color: $ink-medium;
+    }
+  }
+}
+
+// Generate button
+.generate-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 48px auto 80px;
+  padding: 24px 64px;
+  background: $indigo;
+  border-radius: $border-radius-round;
+
+  &:active {
+    opacity: 0.85;
+  }
+
+  .generate-text {
+    font-size: 30px;
+    color: #ffffff;
+    font-weight: 500;
+  }
+}
+
+// ─── Card Preview Modal ───
+.card-preview-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: $z-index-overlay;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .card-preview-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 85%;
+    max-height: 90vh;
+
+    .card-preview-image {
+      width: 100%;
+      border-radius: $border-radius-md;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-preview-actions {
+      display: flex;
+      gap: 24px;
+      margin-top: 32px;
+
+      .card-action-btn {
+        padding: 16px 48px;
+        border-radius: 40px;
+        font-size: 28px;
+        font-weight: 500;
+
+        &.save-btn {
+          background: $cinnabar;
+          color: #fff;
+        }
+
+        &.close-btn {
+          background: rgba(255, 255, 255, 0.2);
+          color: #fff;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+  }
+}

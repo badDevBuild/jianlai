@@ -10,17 +10,17 @@
 // 搜索栏 - 与其他页面统一
 .search-header {
     padding: $spacing-md $spacing-lg;
-    background: #fff;
+    background: $paper-light;
     border-bottom: 2px solid rgba($ink-dark, 0.05);
-    display: flex; // Add flex container
+    display: flex;
     align-items: center;
 
     .search-input-wrap {
         flex: 1; // Take remaining space
         display: flex;
         align-items: center;
-        background: #f3f4f6;
-        border-radius: 32px;
+        background: $paper-white;
+        border-radius: $border-radius-lg;
         padding: 16px 24px;
 
         .search-icon {
@@ -58,9 +58,9 @@
 .filter-tabs {
     display: flex;
     padding: 0 32px 16px;
-    background: #fff;
+    background: $paper-light;
     border-bottom: 2px solid rgba($ink-dark, 0.05);
-    margin-bottom: 8px;
+    margin-bottom: $spacing-xs;
 
     .filter-tab {
         font-size: 28px;
@@ -68,12 +68,12 @@
         padding: 12px 24px;
         border-radius: 32px;
         margin-right: 16px;
-        background: #f8f8f8;
+        background: $paper-white;
         transition: all 0.2s;
 
         &.active {
-            background: $ink-dark; // 选中深色背景
-            color: #fff;
+            background: $ink-dark;
+            color: $paper-light;
             font-weight: 500;
         }
     }
@@ -82,28 +82,27 @@
 // 搜索列表
 .search-results {
     flex: 1;
-    padding: 24px 40px;
+    padding: $spacing-md $spacing-xl-sm;
     box-sizing: border-box;
 
     .result-item {
         display: flex;
         align-items: center;
-        background: #fff;
-        border-radius: 20px;
-        padding: 24px 32px;
+        @include ink-card;
+        padding: $spacing-md $spacing-lg;
         margin-bottom: 20px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         border: 2px solid rgba($ink-dark, 0.02);
 
         &:active {
-            background: #fafafa;
+            background: $paper-white;
         }
 
         .result-avatar-wrap {
             width: 96px;
             height: 96px;
             border-radius: 50%;
-            border: 2px solid #e5e5e5;
+            border: 2px solid $ink-faint;
             padding: 2px;
             margin-right: 32px;
 
@@ -111,7 +110,7 @@
                 width: 100%;
                 height: 100%;
                 border-radius: 50%;
-                background: #f0f0f0;
+                background: $paper-white;
             }
         }
 
@@ -123,25 +122,25 @@
             align-items: center;
             justify-content: center;
             margin-right: 32px;
-            background: #f8f9fa;
+            background: $paper-white;
 
             .result-icon {
                 font-size: 48px;
             }
 
             &.type-item {
-                background: #fffbeb;
-                color: #d97706;
+                background: rgba($ochre, 0.08);
+                color: $ochre;
             }
 
             &.type-faction {
-                background: #eff6ff;
-                color: #2563eb;
+                background: rgba($indigo, 0.08);
+                color: $indigo;
             }
 
             &.type-location {
-                background: #f0fdf4;
-                color: #16a34a;
+                background: rgba($bamboo, 0.08);
+                color: $bamboo;
             }
         }
 
@@ -155,6 +154,7 @@
                 color: $ink-dark;
                 font-family: "Songti SC", serif;
                 margin-bottom: 8px;
+                @include text-ellipsis;
             }
 
             .result-type {
@@ -175,7 +175,7 @@
 
 // 热门搜索
 .search-suggestions {
-    padding: 40px;
+    padding: $spacing-xl-sm;
 
     .suggestion-title {
         display: block;
@@ -192,15 +192,15 @@
 
         .suggestion-tag {
             padding: 12px 32px;
-            background: #fff;
-            border-radius: 32px;
+            background: $paper-light;
+            border-radius: $border-radius-lg;
             font-size: 28px;
             color: $ink-dark;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             border: 2px solid rgba($ink-dark, 0.02);
 
             &:active {
-                background: #f0f0f0;
+                background: $paper-white;
             }
         }
     }
@@ -209,7 +209,7 @@
 .loading,
 .no-results {
     text-align: center;
-    padding: 40px;
+    padding: $spacing-xl-sm;
     color: $ink-light;
     font-size: 28px;
 }

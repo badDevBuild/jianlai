@@ -8,7 +8,12 @@
     flex-direction: column;
 }
 
-// 顶部搜索栏 - Removed as requested
+.filter-container {
+    padding: $spacing-md;
+    background: $paper-light;
+    border-bottom: 1px solid rgba($ink-dark, 0.05);
+    flex-shrink: 0;
+}
 
 .list-content {
     flex: 1;
@@ -34,16 +39,14 @@
 }
 
 .faction-card {
-    background: #fff;
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    @include ink-card;
+    padding: $spacing-lg;
     border: 2px solid rgba($ink-dark, 0.02);
     display: flex;
     flex-direction: column;
 
     &:active {
-        background: #fafafa;
+        background: $paper-white;
     }
 
     .card-header {
@@ -54,7 +57,7 @@
         .faction-icon {
             width: 80px;
             height: 80px;
-            background: #eff6ff;
+            background: rgba($indigo, 0.08);
             border-radius: 20px;
             display: flex;
             align-items: center;
@@ -69,25 +72,51 @@
 
             .faction-name {
                 display: block;
-                font-size: 34px; // Larger title
+                font-size: 34px;
                 font-weight: 600;
                 color: $ink-dark;
                 font-family: "Songti SC", serif;
-                margin-bottom: 8px;
+                margin-bottom: 12px;
+                @include text-ellipsis;
             }
 
-            .faction-location {
-                display: inline-block;
-                font-size: 24px;
-                color: $ink-light;
-                background: #f3f4f6;
-                padding: 4px 12px;
-                border-radius: 8px;
+            .faction-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+
+                .tag {
+                    font-size: 22px;
+                    padding: 4px 12px;
+                    border-radius: 8px;
+
+                    &.type-tag {
+                        background: rgba($indigo, 0.08);
+                        color: $indigo;
+                    }
+
+                    &.power-tag {
+                        font-weight: 600;
+                    }
+                    &.power-high {
+                        background: rgba($cinnabar, 0.1);
+                        color: $cinnabar;
+                    }
+                    &.power-mid {
+                        background: rgba($ochre, 0.1);
+                        color: $ochre;
+                    }
+                    &.power-low {
+                        background: rgba($bamboo, 0.1);
+                        color: $bamboo;
+                    }
+                }
             }
         }
 
         .member-badge {
             text-align: center;
+            margin-left: 16px;
 
             .count {
                 display: block;
@@ -105,8 +134,15 @@
         }
     }
 
+    .card-region {
+        font-size: 22px;
+        color: $ink-light;
+        padding: 0 0 16px;
+        margin-bottom: 0;
+    }
+
     .card-body {
-        margin-bottom: 24px;
+        margin-bottom: 0;
 
         .faction-desc {
             font-size: 28px;
@@ -116,22 +152,4 @@
         }
     }
 
-    .card-footer {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        border-top: 2px solid rgba($ink-dark, 0.03);
-        padding-top: 20px;
-
-        .view-more {
-            font-size: 24px;
-            color: $indigo;
-            margin-right: 8px;
-        }
-
-        .arrow {
-            font-size: 24px;
-            color: $indigo;
-        }
-    }
 }

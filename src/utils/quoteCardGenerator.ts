@@ -109,12 +109,12 @@ export async function generateQuoteCard(
   const authorY = textStartY + textBlockH + 40;
 
   // Accent line
-  ctx.fillStyle = '#3b82f6';
+  ctx.fillStyle = '#485a6c';
   ctx.fillRect(W / 2 - 25, authorY, 50, 4);
 
   // Author name
   ctx.font = '28px "PingFang SC", sans-serif';
-  ctx.fillStyle = '#3b82f6';
+  ctx.fillStyle = '#485a6c';
   ctx.textAlign = 'center';
   ctx.fillText(data.author, W / 2, authorY + 40);
 

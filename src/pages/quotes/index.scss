@@ -8,11 +8,11 @@
 }
 
 .page-header {
-  padding: 40px;
-  background: #fff;
+  padding: $spacing-xl-sm;
+  background: $paper-light;
   border-bottom: 2px solid $ink-faint;
   text-align: center;
-  flex-shrink: 0; // Prevent shrinking
+  flex-shrink: 0;
 
   .title {
     display: block;
@@ -29,12 +29,47 @@
   }
 }
 
+// 标签筛选栏
+.tag-filter {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 20px $spacing-xl-sm;
+  border-bottom: 1px solid rgba($ink-dark, 0.04);
+  background: $paper-light;
+
+  .tag-item {
+    display: inline-block;
+    font-size: 26px;
+    color: $ink-light;
+    padding: 8px 24px;
+    margin-right: 16px;
+    position: relative;
+
+    &.active {
+      color: $indigo;
+      font-weight: 600;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 32px;
+        height: 4px;
+        background: $indigo;
+        border-radius: 2px;
+      }
+    }
+  }
+}
+
 .quotes-list {
   flex: 1;
-  min-height: 0; // Critical for scrolling
-  padding: 24px 40px; // side padding same as detail
+  min-height: 0;
+  padding: $spacing-md $spacing-xl-sm;
   box-sizing: border-box;
-  background: #faf9f6; // 稍微有点区别的背景
+  background: $paper-white;
 }
 
 .list-wrapper {
@@ -46,22 +81,21 @@
 }
 
 .quote-card {
-  background: #fff;
-  padding: 40px;
-  border-radius: 2px; // 更犀利的角，像纸片
+  background: $paper-light;
+  padding: $spacing-xl-sm;
+  border-radius: 2px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
   border: 1px solid rgba($ink-dark, 0.05);
   position: relative;
   overflow: hidden;
 
-  // 装饰性纹理 (可选)
   &:after {
-    content: '"';
+    content: '\201C';
     position: absolute;
     top: 20px;
     left: 20px;
     font-size: 80px;
-    color: rgba($ink-light, 0.1);
+    color: rgba($indigo, 0.12);
     font-family: serif;
     line-height: 1;
   }
@@ -89,7 +123,7 @@
       .author-name {
         font-size: 28px;
         font-weight: 600;
-        color: $ink-main;
+        color: $indigo;
       }
 
       .context {
@@ -104,8 +138,97 @@
       width: 72px;
       height: 72px;
       border-radius: 36px;
-      background: #f0f0f0;
+      background: $paper-white;
       border: 2px solid rgba($ink-dark, 0.1);
+    }
+  }
+
+  .share-entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba($ink-dark, 0.04);
+
+    .share-text {
+      font-size: 22px;
+      color: $ink-light;
+    }
+  }
+}
+
+// 空状态
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120px 0;
+
+  .empty-text {
+    font-size: 30px;
+    color: $ink-light;
+    font-family: "Songti SC", serif;
+    margin-bottom: 32px;
+  }
+
+  .empty-action {
+    padding: 16px 40px;
+    border: 1px solid $indigo;
+    border-radius: $border-radius-round;
+    color: $indigo;
+    font-size: 26px;
+  }
+}
+
+// Card Preview Modal
+.card-preview-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: $z-index-overlay;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .card-preview-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 85%;
+    max-height: 90vh;
+
+    .card-preview-image {
+      width: 100%;
+      border-radius: $border-radius-md;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-preview-actions {
+      display: flex;
+      gap: 24px;
+      margin-top: 32px;
+
+      .card-action-btn {
+        padding: 16px 48px;
+        border-radius: 40px;
+        font-size: 28px;
+        font-weight: 500;
+
+        &.save-btn {
+          background: $cinnabar;
+          color: #fff;
+        }
+
+        &.close-btn {
+          background: rgba(255, 255, 255, 0.2);
+          color: #fff;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+      }
     }
   }
 }

@@ -19,8 +19,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 40px;
-  background: #fff;
+  padding: $spacing-xxl $spacing-xl-sm;
+  background: $paper-light;
   border-bottom: 2px solid $ink-faint;
 
   .header-icon {
@@ -42,9 +42,10 @@
     color: $ink-dark;
     font-family: "Songti SC", serif;
     margin-bottom: 20px;
+    @include text-ellipsis;
   }
 
-  .type-pill {
+  .detail-category {
     font-size: 28px;
     padding: 8px 24px;
     border-radius: 32px;
@@ -54,12 +55,68 @@
   }
 }
 
+// Hierarchy breadcrumb
+.hierarchy-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 20px 32px;
+  background: $paper-white;
+  border-bottom: 1px solid rgba($ink-dark, 0.04);
+  gap: 4px;
+
+  .hierarchy-segment {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hierarchy-sep {
+    font-size: 22px;
+    color: $ink-light;
+    margin: 0 4px;
+  }
+
+  .hierarchy-item {
+    font-size: 26px;
+    color: $indigo;
+    padding: 8px 16px;
+    border-radius: $border-radius-sm;
+
+    &:active {
+      background: rgba($indigo, 0.08);
+    }
+  }
+}
+
+// Aliases row
+.aliases-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px 32px;
+  background: $paper-light;
+  border-bottom: 1px solid rgba($ink-dark, 0.04);
+
+  .aliases-label {
+    font-size: 26px;
+    color: $ink-medium;
+    white-space: nowrap;
+    margin-right: 8px;
+  }
+
+  .aliases-text {
+    font-size: 26px;
+    color: $ink-main;
+    line-height: 1.6;
+  }
+}
+
 .parent-link {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: #fafafa;
+  background: $paper-white;
   border-bottom: 2px solid rgba($ink-dark, 0.03);
 
   .label {
@@ -80,13 +137,20 @@
   }
 
   &:active {
-    background: #f0f0f0;
+    background: $paper-white;
   }
 }
 
 .detail-section {
-  padding: 40px;
+  padding: $spacing-xl-sm;
   border-bottom: 2px solid rgba($ink-dark, 0.03);
+
+  .section-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
 
   .section-title {
     display: block;
@@ -94,7 +158,6 @@
     font-family: "Songti SC", serif;
     font-weight: bold;
     color: $ink-dark;
-    margin-bottom: 32px;
     border-left: 6px solid $cinnabar;
     padding-left: 16px;
   }
@@ -105,6 +168,67 @@
       line-height: 1.8;
       color: $ink-main;
       text-align: justify;
+    }
+  }
+}
+
+// Children section
+.children-section {
+  .children-count {
+    font-size: 24px;
+    color: $ink-light;
+  }
+
+  .children-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: rgba($ink-dark, 0.02);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .child-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 20px;
+    background: $paper-light;
+
+    &:active {
+      background: $paper-white;
+    }
+
+    .child-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .child-name {
+      font-size: 30px;
+      color: $ink-dark;
+      font-family: "Songti SC", serif;
+      @include text-ellipsis;
+      flex: 1;
+    }
+
+    .child-type-tag {
+      font-size: 20px;
+      color: $ink-medium;
+      background: rgba($ink-medium, 0.08);
+      padding: 6px 12px;
+      border-radius: $border-radius-sm;
+      white-space: nowrap;
+    }
+
+    .child-arrow {
+      font-size: 26px;
+      color: $ink-light;
+      flex-shrink: 0;
+      margin-left: 12px;
     }
   }
 }

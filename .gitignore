@@ -6,3 +6,23 @@ node_modules/
 .DS_Store
 .swc
 *.local
+
+# Credentials and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+
+# Generated/copy-only data. Canonical JSON lives in the parent data pipeline.
+src/data/items_enriched.json
+
+# Generated item artwork is deployed through the asset host, not bundled in Git.
+src/assets/images/items/
+
+# Keep optimized WebP fallbacks; exclude redundant source PNGs.
+public/data/img/avatars/*.png

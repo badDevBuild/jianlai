@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { useItems, getItemIcon } from '../../data/useData';
 import { useAppShare } from '../../utils/share';
 import FilterBar from '../../components/FilterBar';
+import Icon from '../../components/Icon';
 import './index.scss';
 
 const PAGE_SIZE = 20;
@@ -116,7 +117,7 @@ export default function ArtifactList() {
                       <Image className="artifact-icon" src={iconUrl} mode="aspectFill" />
                     ) : (
                       <View className="artifact-icon-placeholder">
-                        <Text>🗡️</Text>
+                        <Icon name="sword" size={24} color="#999999" />
                       </View>
                     )}
 
@@ -124,7 +125,7 @@ export default function ArtifactList() {
                       <View className="card-main">
                         <View className="card-header">
                           <View className="header-left">
-                            {isShenqi && <Text className="shenqi-icon">✨</Text>}
+                            {isShenqi && <Icon name="sparkle" size={16} color="#b8860b" />}
                             <Text className="item-name">{item.name}</Text>
                           </View>
                           <View className={`grade-tag ${getGradeClass(item.grade as string)}`}>

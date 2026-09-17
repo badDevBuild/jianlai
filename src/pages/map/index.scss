@@ -2,8 +2,8 @@
 
 .map-page {
     min-height: 100vh;
-    background: #f3f4f6;
-    padding: 32px;
+    background: $paper-white;
+    padding: $spacing-lg;
     padding-bottom: 60px;
     box-sizing: border-box;
 
@@ -29,7 +29,7 @@
 
         .location-btn {
             background: $ink-dark;
-            color: #fff;
+            color: $paper-light;
             font-size: 28px;
             padding: 0 40px;
             height: 72px;
@@ -45,8 +45,7 @@
     }
 
     .map-card {
-        background: #fff;
-        border-radius: 24px;
+        @include ink-card;
         overflow: hidden;
         margin-bottom: 40px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
@@ -57,7 +56,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 2px solid $ink-faint;
 
             .card-title {
                 font-size: 32px;
@@ -69,7 +68,7 @@
             .card-tag {
                 font-size: 22px;
                 color: $ink-light;
-                background: #f5f5f5;
+                background: $paper-white;
                 padding: 6px 16px;
                 border-radius: 12px;
             }
@@ -86,8 +85,8 @@
             padding: 16px;
             font-size: 22px;
             color: $ink-light;
-            background: #fafafa;
-            border-top: 2px solid #f0f0f0;
+            background: $paper-white;
+            border-top: 2px solid $ink-faint;
         }
     }
 }
@@ -100,7 +99,7 @@
     width: 100vw;
     height: 100vh;
     background: #000;
-    z-index: 9999;
+    z-index: $z-index-overlay;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -138,10 +137,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 10000;
+        z-index: $z-index-overlay + 1;
 
         text {
-            color: #fff;
+            color: $paper-light;
             font-size: 40px;
             line-height: 1;
         }

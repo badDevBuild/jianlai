@@ -1,8 +1,11 @@
-import { View, Text, ScrollView, Image } from '@tarojs/components';
+import { View, Text, ScrollView, Image, Canvas } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import { useItem, getItemIcon } from '../../data/useData';
 import { useAppShare } from '../../utils/share';
+import { trackPageView, trackCardGenerate, trackCardSave } from '../../utils/analytics';
+import { generateItemCard } from '../../utils/itemCardGenerator';
+import Icon from '../../components/Icon';
 import UgcEntry from '../../components/UgcEntry';
 import './index.scss';
 
@@ -14,11 +17,73 @@ export default function ArtifactDetail() {
     title: `【剑来·法宝】${name}`,
     path: `/pages/artifact-detail/index?name=${encodeURIComponent(name)}`
   });
+  useEffect(() => { trackPageView('/pages/artifact-detail/index', name); }, [name]);
   const [expanded, setExpanded] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [showCardPreview, setShowCardPreview] = useState(false);
+  const [cardImagePath, setCardImagePath] = useState('');
+
+  const handleGenerateCard = () => {
+    if (!item || generating) return;
+    setGenerating(true);
+    const query = Taro.createSelectorQuery();
+    query.select('#itemCardCanvas')
+      .fields({ node: true, size: true })
+      .exec(async (res) => {
+        try {
+          const canvasNode = res[0]?.node;
+          if (!canvasNode) {
+            Taro.showToast({ title: '画布初始化失败', icon: 'none' });
+            setGenerating(false);
+            return;
+          }
+          const dpr = Taro.getSystemInfoSync().pixelRatio;
+          const tempPath = await generateItemCard(canvasNode, {
+            name: item.name,
+            grade: item.grade || '未知',
+            type: item.type,
+            owner: (item as any).holder || (item as any).current_owner || '',
+            description: item.description || '',
+            icon: getItemIcon(item),
+          }, dpr);
+          trackCardGenerate('item', item.name);
+          setCardImagePath(tempPath);
+          setShowCardPreview(true);
+        } catch (err) {
+          console.error('Item card generation failed:', err);
+          Taro.showToast({ title: '生成失败', icon: 'none' });
+        } finally {
+          setGenerating(false);
+        }
+      });
+  };
+
+  const handleSaveCard = () => {
+    if (!cardImagePath) return;
+    Taro.saveImageToPhotosAlbum({
+      filePath: cardImagePath,
+      success: () => {
+        trackCardSave('item', name);
+        Taro.showToast({ title: '已保存到相册', icon: 'success' });
+      },
+      fail: (err) => {
+        if (err.errMsg?.includes('deny') || err.errMsg?.includes('auth')) {
+          Taro.showModal({
+            title: '需要相册权限',
+            content: '请在设置中开启相册访问权限',
+            confirmText: '去设置',
+            success: (r) => { if (r.confirm) Taro.openSetting(); }
+          });
+        } else {
+          Taro.showToast({ title: '保存失败', icon: 'none' });
+        }
+      }
+    });
+  };
 
   useEffect(() => {
     if (item) {
-      Taro.setNavigationBarTitle({ title: `${item.name} - 剑来法宝` });
+      Taro.setNavigationBarTitle({ title: `${item.name} - 剑来` });
     }
   }, [item]);
 
@@ -39,6 +104,22 @@ export default function ArtifactDetail() {
 
   return (
     <ScrollView className="detail-page" scrollY>
+      {/* Hidden Canvas */}
+      <Canvas type="2d" id="itemCardCanvas" style={{ width: '750px', height: '1100px', position: 'fixed', left: '-9999px', top: 0 }} />
+
+      {/* Card Preview Modal */}
+      {showCardPreview && cardImagePath && (
+        <View className="card-preview-modal" onClick={() => setShowCardPreview(false)}>
+          <View className="card-preview-content" onClick={e => e.stopPropagation()}>
+            <Image className="card-preview-image" src={cardImagePath} mode="widthFix" />
+            <View className="card-preview-actions">
+              <View className="card-action-btn save-btn" onClick={handleSaveCard}><Text>保存到相册</Text></View>
+              <View className="card-action-btn close-btn" onClick={() => setShowCardPreview(false)}><Text>关闭</Text></View>
+            </View>
+          </View>
+        </View>
+      )}
+
       {/* Image / Header */}
       <View className="detail-header">
         <View className="avatar-wrapper">
@@ -59,6 +140,11 @@ export default function ArtifactDetail() {
               </View>
             )}
           </View>
+        </View>
+        {/* 分享卡片按钮 */}
+        <View className="share-card-btn" onClick={handleGenerateCard}>
+          <Icon name="share" size={16} color="#485a6c" />
+          <Text className="share-card-text">{generating ? '生成中...' : '分享卡片'}</Text>
         </View>
       </View>
 

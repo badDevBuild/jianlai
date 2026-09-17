@@ -1,11 +1,14 @@
 import { View, Text, ScrollView } from '@tarojs/components';
 import { useTimeline } from '../../data/useData';
 import { useState, useMemo } from 'react';
+import Icon from '../../components/Icon';
+import { useAppShare } from '../../utils/share';
 import './index.scss';
 
 const PAGE_SIZE = 20;
 
 export default function Timeline() {
+    useAppShare({ title: '剑来光阴 - 编年长卷', path: '/pages/timeline/index' });
     const { data: timelineData, loading, error } = useTimeline();
     const [page, setPage] = useState(1);
     const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -46,11 +49,20 @@ export default function Timeline() {
     }, [selectedType]);
 
     if (loading) {
-        return <View className="loading"><Text>加载中...</Text></View>;
+        return (
+            <View className="timeline-page loading">
+                <View className="loading-spinner"></View>
+                <Text>光阴长河缓缓铺展...</Text>
+            </View>
+        );
     }
 
     if (error || !timelineData) {
-        return <View className="error"><Text>加载失败</Text></View>;
+        return (
+            <View className="timeline-page error">
+                <Text>加载失败</Text>
+            </View>
+        );
     }
 
     return (
@@ -108,13 +120,13 @@ export default function Timeline() {
                             <View className="event-footer">
                                 {event.participants && event.participants.length > 0 && (
                                     <View className="meta-row">
-                                        <Text className="meta-label">👥</Text>
+                                        <Icon name="users" size={14} color="#999999" />
                                         <Text className="meta-value">{event.participants.slice(0, 3).join('、')}等</Text>
                                     </View>
                                 )}
                                 {event.source_chapter && (
                                     <View className="meta-row">
-                                        <Text className="meta-label">📚</Text>
+                                        <Icon name="book" size={14} color="#999999" />
                                         <Text className="meta-value">{event.source_chapter}</Text>
                                     </View>
                                 )}

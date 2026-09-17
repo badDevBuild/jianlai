@@ -37,23 +37,6 @@
         }
     }
 
-    .graph-controls {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 10;
-        // Float above without a hard background block, relying on the component's glassmorphism
-        // But FilterBar has its own bg, so we just position it.
-        padding-bottom: env(safe-area-inset-bottom);
-        // Remove hard shadow here, let FilterBar handle it or be flush
-        background: transparent;
-        pointer-events: none; // Let clicks pass through empty areas
-
-        .filter-bar {
-            pointer-events: auto; // Re-enable pointer events for the bar itself
-        }
-    }
 }
 
 @keyframes spin {

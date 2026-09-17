@@ -1,0 +1,26 @@
+.inline-ugc-entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: rgba(72, 90, 108, 0.05);
+    /* 主题色的淡化版 */
+    border-radius: 20px;
+    border: 1px dashed rgba(72, 90, 108, 0.3);
+    margin-left: 12px;
+    transition: all 0.2s;
+}
+
+.inline-ugc-entry:active {
+    opacity: 0.7;
+    background: rgba(72, 90, 108, 0.1);
+}
+
+.inline-ugc-entry .icon {
+    font-size: 24px;
+}
+
+.inline-ugc-entry .text {
+    font-size: 24px;
+    color: #485a6c;
+}

@@ -1,0 +1,196 @@
+.sheet-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f7f6f2;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.sheet-container {
+  width: 100%;
+  height: 100%;
+  background: #f7f6f2;
+  padding: 0 0 env(safe-area-inset-bottom);
+  overflow: hidden;
+}
+
+.sheet-nav {
+  display: flex;
+  align-items: center;
+  height: 88px;
+  padding: 0 24px;
+  background: #f7f6f2;
+  border-bottom: 1px solid #f0eeea;
+}
+
+.sheet-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 28px;
+  color: #485a6c;
+}
+
+.sheet-loading {
+  padding: 60px 0;
+  text-align: center;
+  color: #999;
+  font-size: 28px;
+}
+
+.sheet-scroll {
+  height: calc(100vh - 88px);
+  padding: 0 24px;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ── 头部 ── */
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f0eeea;
+}
+
+.sheet-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 3px solid #b03a2e;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.sheet-name {
+  display: block;
+  font-size: 36px;
+  font-weight: 700;
+  font-family: "Songti SC", serif;
+  color: #1a1a1a;
+}
+
+.sheet-realm {
+  display: block;
+  font-size: 24px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.sheet-faction {
+  display: block;
+  font-size: 22px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.sheet-aliases {
+  display: block;
+  font-size: 20px;
+  color: #b8860b;
+  margin-top: 8px;
+}
+
+/* ── 关系分组 ── */
+
+.relation-group {
+  margin-top: 24px;
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.group-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.group-name {
+  font-size: 26px;
+  font-weight: 600;
+  color: #333;
+}
+
+.group-count {
+  font-size: 22px;
+  color: #999;
+  margin-left: auto;
+}
+
+.group-arrow {
+  font-size: 20px;
+  color: #ccc;
+  margin-left: 8px;
+}
+
+/* ── 关系卡片 ── */
+
+.relation-card {
+  background: #faf9f5;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 12px;
+  border: 1px solid #f0eeea;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.rel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rel-target {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.rel-strength {
+  font-size: 20px;
+}
+
+.rel-evidence {
+  margin-top: 12px;
+}
+
+.evidence-text {
+  display: block;
+  font-size: 24px;
+  color: #666;
+  line-height: 1.7;
+  font-style: italic;
+  border-left: 3px solid #e0e0e0;
+  padding-left: 16px;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+.evidence-chapter {
+  display: block;
+  font-size: 20px;
+  color: #999;
+  margin-top: 8px;
+  padding-left: 16px;
+}
+
+.group-more {
+  text-align: center;
+  padding: 12px;
+  font-size: 22px;
+  color: #485a6c;
+}

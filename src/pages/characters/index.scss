@@ -9,41 +9,16 @@
 }
 
 // 派系筛选
-.faction-filter {
-    white-space: nowrap;
-    background: #fff;
-    padding: 24px 32px;
-    border-bottom: 2px solid rgba($ink-dark, 0.05);
-    width: 100%;
-    flex-shrink: 0; // Prevent shrinking
-
-    // 确保 ScrollView 内部内容正确排布
-    .faction-tag {
-        display: inline-block;
-        padding: 12px 32px;
-        background: #f8f8f8;
-        border-radius: 32px;
-        font-size: 28px;
-        color: $ink-medium;
-        margin-right: 20px;
-        transition: all 0.3s;
-
-        &.active {
-            background: $ink-dark;
-            color: #fff;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        &:last-child {
-            margin-right: 32px; // 右侧留白
-        }
-    }
+.filter-container {
+    padding: $spacing-md;
+    background: $paper-light;
+    border-bottom: 1px solid rgba($ink-dark, 0.05);
+    flex-shrink: 0;
 }
 
 // 数量统计
 .character-count {
-    padding: 24px 40px 0;
+    padding: $spacing-md $spacing-xl-sm 0;
     font-size: 24px;
     color: $ink-light;
     flex-shrink: 0; // Prevent shrinking
@@ -53,21 +28,19 @@
 .character-list {
     flex: 1;
     min-height: 0; // Critical for scrolling
-    padding: 24px 40px;
+    padding: $spacing-md $spacing-xl-sm;
     box-sizing: border-box;
 
     .character-item {
         display: flex;
-        padding: 32px;
-        margin-bottom: 24px;
-        background: #fff;
-        border-radius: 24px;
+        padding: $spacing-lg;
+        margin-bottom: $spacing-md;
+        @include ink-card;
         border: 2px solid rgba($ink-dark, 0.02);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
         align-items: center;
 
         &:active {
-            background: #fafafa;
+            background: $paper-white;
         }
 
         .item-avatar-wrap {
@@ -77,13 +50,13 @@
             margin-right: 32px;
             border-radius: 50%;
             overflow: hidden;
-            border: 4px solid #f0f0f0;
+            border: 4px solid $ink-faint;
             flex-shrink: 0;
 
             .item-avatar {
                 width: 100%;
                 height: 100%;
-                background: #f3f4f6;
+                background: $paper-white;
             }
         }
 
@@ -110,8 +83,8 @@
 
                 .item-faction {
                     font-size: 22px;
-                    color: #2563eb;
-                    background: #eff6ff;
+                    color: $indigo;
+                    background: rgba($indigo, 0.08);
                     padding: 4px 12px;
                     border-radius: 8px;
                 }
@@ -133,10 +106,10 @@
                 .tag {
                     font-size: 20px;
                     color: $ink-light;
-                    background: #f8f9fa;
+                    background: $paper-white;
                     padding: 4px 12px;
-                    border-radius: 6px;
-                    border: 1px solid rgba(0, 0, 0, 0.03);
+                    border-radius: $border-radius-sm;
+                    border: 1px solid rgba($ink-dark, 0.03);
                 }
             }
         }
@@ -146,7 +119,7 @@
             flex-direction: column;
             align-items: center;
             padding-left: 24px;
-            border-left: 2px solid #f0f0f0;
+            border-left: 2px solid $ink-faint;
             margin-left: 16px;
 
             .stat-value {
@@ -165,7 +138,7 @@
 
     .loading-more {
         text-align: center;
-        padding: 32px;
+        padding: $spacing-lg;
         color: $ink-light;
         font-size: 24px;
     }

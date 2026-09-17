@@ -1,68 +1,137 @@
 @import '../../styles/theme.scss';
 
-.filter-bar {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding: 20px 24px; // Increased padding
-    background: rgba(255, 255, 255, 0.85); // Glassmorphism base
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba($ink-dark, 0.05); // Very faint border
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
+.filter-bar-wrapper {
+    position: relative;
+    background: $paper-light;
+    transition: all 0.3s ease;
+    border-radius: 0 0 24px 24px; // Rounded bottom corners when expanded looks nice
 
-    &::-webkit-scrollbar {
-        display: none;
+    // Normal Scroll Mode
+    .filter-scroll-area {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 20px 24px;
+        padding-right: 80px; // Space for the expand button
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 
-    .filter-chip {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 24px; // Larger touch target
-        margin-right: 16px;
-        background: $paper-light;
-        border-radius: 40px; // Pill shape
-        border: 2px solid rgba($ink-dark, 0.1); // Ink outline
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    // Expanded Grid Mode
+    &.expanded {
+        // position: absolute; // Removed to let it expand naturally upwards from bottom
+        // top: 0;
+        bottom: 0; // Anchor to bottom if needed, but in-flow is better
+        left: 0;
+        right: 0;
+        z-index: $z-index-nav;
+        max-height: 70vh; // Limit height to 70% of screen
+        display: flex; // Use flex column to manage scroll area
+        flex-direction: column;
 
-        &.active {
-            background: $ink-dark; // Solid ink block
-            border-color: $ink-dark;
-            transform: translateY(-2px); // Subtle lift
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-
-            .filter-text {
-                color: $paper-light;
-                font-weight: 500;
-            }
+        .filter-scroll-area {
+            flex-wrap: wrap; // Switch to grid
+            overflow-x: hidden; // No horizontal scroll
+            overflow-y: auto; // Vertical scroll
+            padding-right: 24px; // Reset padding
+            padding-top: 60px; // Space for the toggle button at top
+            gap: 12px; // Vertical gap
         }
+
+        .filter-chip {
+            margin-right: 0; // Reset margin, use gap logic if supported, or margin-bottom
+            margin-bottom: 0;
+        }
+
+        .expand-btn {
+            // Ensure button stays fixed at top right of the container
+            top: 10px;
+            right: 16px;
+            z-index: $z-index-nav + 2;
+        }
+    }
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px; // Slightly smaller for grid density
+    margin-right: 12px;
+    background: $paper-light;
+    border-radius: 32px;
+    border: 1px solid rgba($ink-dark, 0.05);
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    flex-shrink: 0;
+
+    &.active {
+        background: $ink-dark;
+        border-color: $ink-dark;
+        color: $paper-light;
+        box-shadow: 0 4px 12px rgba($ink-dark, 0.15);
 
         .filter-text {
-            font-size: $font-size-sm;
-            color: $ink-medium;
-            font-family: "Songti SC", serif; // Serif for traditional feel
-            transition: color 0.3s;
-        }
-
-        &:last-child {
-            margin-right: 0;
-        }
-
-        &:active {
-            transform: scale(0.96);
+            color: $paper-light;
+            font-weight: 500;
         }
     }
 
-    .filter-divider {
-        width: 2px;
-        height: 32px;
-        background: rgba($ink-dark, 0.1);
-        margin: 0 16px;
-        align-self: center;
-        flex-shrink: 0;
-        border-radius: 2px;
+    .filter-text {
+        font-size: 26px;
+        color: $ink-medium;
+        font-family: "Songti SC", serif;
     }
+
+    &:active {
+        transform: scale(0.96);
+    }
+}
+
+.filter-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba($ink-dark, 0.1);
+    margin: 0 12px;
+    align-self: center;
+    flex-shrink: 0;
+}
+
+// Expand Button
+.expand-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 64px;
+    height: 64px;
+    background: $paper-light;
+    border-radius: 50%;
+    box-shadow: -4px 0 12px rgba(255, 255, 255, 1), 0 4px 12px rgba(0, 0, 0, 0.08); // White fade to cover text
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: $z-index-nav + 1;
+    transition: all 0.3s;
+
+    .icon {
+        font-size: 20px;
+        color: $ink-medium;
+    }
+
+    &.active {
+        background: $paper-light;
+
+        .icon {
+            transform: rotate(180deg); // Optional rotation if using arrow
+        }
+    }
+}
+
+.expand-placeholder {
+    width: 60px;
+    flex-shrink: 0;
 }

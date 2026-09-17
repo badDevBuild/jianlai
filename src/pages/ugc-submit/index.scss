@@ -1,0 +1,156 @@
+@import '../../styles/theme.scss';
+
+.ugc-submit-page {
+    min-height: 100vh;
+    background: $paper-white;
+    padding: $spacing-xl-sm $spacing-lg;
+    box-sizing: border-box;
+}
+
+.header-box {
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.title {
+    font-size: $font-size-lg;
+    color: $ink-medium;
+}
+
+.target-name {
+    font-size: 40px;
+    color: $indigo;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.target-field {
+    font-size: $font-size-lg;
+    color: $cinnabar;
+    font-weight: 500;
+}
+
+.form-group {
+    margin-bottom: 40px;
+}
+
+.label {
+    display: block;
+    font-size: $font-size-base;
+    color: $ink-main;
+    font-weight: 500;
+    margin-bottom: $spacing-sm;
+    padding-left: $spacing-xs;
+    border-left: 6px solid $indigo;
+}
+
+.picker-box,
+.content-input {
+    background: $paper-light;
+    border: 1px solid $ink-faint;
+    border-radius: 12px;
+    padding: $spacing-md;
+    font-size: $font-size-base;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.picker-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: $ink-main;
+}
+
+.arrow {
+    color: $ink-light;
+    font-size: $font-size-sm;
+}
+
+.content-input {
+    height: 300px;
+    line-height: 1.5;
+}
+
+.image-uploader {
+    background: $paper-light;
+    border: 1px dashed $ink-faint;
+    border-radius: 12px;
+    padding: 30px;
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+}
+
+.add-icon {
+    font-size: 60px;
+    color: $ink-light;
+    line-height: 1;
+}
+
+.upload-tip {
+    font-size: $font-size-sm;
+    color: $ink-light;
+}
+
+.preview-box {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    border-radius: $border-radius-sm;
+    overflow: hidden;
+}
+
+.preview-img {
+    width: 100%;
+    height: 100%;
+}
+
+.del-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.6);
+    color: $paper-light;
+    font-size: $font-size-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+    z-index: $z-index-sticky;
+}
+
+.submit-btn {
+    margin-top: 60px;
+    background: $indigo;
+    color: $paper-light;
+    font-size: $font-size-lg;
+    border-radius: $border-radius-round;
+    height: 88px;
+    line-height: 88px;
+    box-shadow: 0 8px 16px rgba($indigo, 0.2);
+}
+
+.submit-btn[disabled] {
+    background: rgba($indigo, 0.5);
+    color: $paper-white;
+}
+
+.bottom-hint {
+    display: block;
+    text-align: center;
+    font-size: $font-size-sm;
+    color: $ink-light;
+    margin-top: 30px;
+}

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useTopCharacters, useRandomQuote, getAvatar, preloadAllData } from '../../data/useData';
 import { useAppShare } from '../../utils/share';
 import { generateQuoteCard } from '../../utils/quoteCardGenerator';
+import { trackCardGenerate, trackCardSave } from '../../utils/analytics';
+import Icon from '../../components/Icon';
 import './index.scss';
 
 // 背景图使用远程 URL
@@ -71,10 +73,10 @@ export default function Index() {
   });
 
   const categories = [
-    { name: '宗派势力', count: `${STATS.factions} 个势力`, icon: '🏔️', path: '/pages/factions/index', color: '#eef2ff', iconColor: '#6366f1' },
-    { name: '宝物图鉴', count: `${STATS.items} 件物品`, icon: '🗡️', path: '/pages/artifacts/index', color: '#fdf4ff', iconColor: '#d946ef' },
-    { name: '地点图鉴', count: `${STATS.locations} 个地点`, icon: '🗺️', path: '/pages/locations/index', color: '#f0fdf4', iconColor: '#22c55e' },
-    { name: '世界观', count: '宏大设定', icon: '📜', path: '/pages/world/index', color: '#fff7ed', iconColor: '#f97316' },
+    { name: '宗派势力', count: `${STATS.factions} 个势力`, icon: 'mountain', path: '/pages/factions/index', color: 'rgba(72,90,108,0.08)', iconColor: '#485a6c' },
+    { name: '宝物图鉴', count: `${STATS.items} 件物品`, icon: 'sword', path: '/pages/artifacts/index', color: 'rgba(176,58,46,0.08)', iconColor: '#b03a2e' },
+    { name: '地点图鉴', count: `${STATS.locations} 个地点`, icon: 'map', path: '/pages/locations/index', color: 'rgba(93,122,93,0.08)', iconColor: '#5d7a5d' },
+    { name: '世界观', count: '宏大设定', icon: 'scroll', path: '/pages/world/index', color: 'rgba(184,134,11,0.08)', iconColor: '#b8860b' },
   ];
 
   const handleCategoryClick = (path: string) => {
@@ -116,6 +118,7 @@ export default function Index() {
             currentBg,
             dpr
           );
+          trackCardGenerate('quote', dailyQuote.author);
           setQuoteCardPath(tempPath);
           setShowQuoteCard(true);
         } catch (err) {
@@ -131,7 +134,10 @@ export default function Index() {
     if (!quoteCardPath) return;
     Taro.saveImageToPhotosAlbum({
       filePath: quoteCardPath,
-      success: () => Taro.showToast({ title: '已保存到相册', icon: 'success' }),
+      success: () => {
+        trackCardSave('quote', dailyQuote.author);
+        Taro.showToast({ title: '已保存到相册', icon: 'success' });
+      },
       fail: (err) => {
         if (err.errMsg?.includes('deny') || err.errMsg?.includes('auth')) {
           Taro.showModal({
@@ -187,7 +193,7 @@ export default function Index() {
 
           {/* 页面内大搜索框 */}
           <View className="page-search-field" onClick={handleSearchClick}>
-            <Text className="search-icon">🔍</Text>
+            <Icon name="search" size={18} color="#999999" />
             <Text className="search-text">搜索人物、法宝、势力...</Text>
           </View>
 
@@ -197,7 +203,7 @@ export default function Index() {
               <Text className="section-title">风流人物</Text>
               <View className="section-link" onClick={() => Taro.navigateTo({ url: '/pages/characters/index' })}>
                 <Text>查看全部</Text>
-                <Text className="arrow">›</Text>
+                <Icon name="arrowRight" size={16} color="#999999" />
               </View>
             </View>
 
@@ -205,7 +211,7 @@ export default function Index() {
               <View className="loading-state"><Text>加载中...</Text></View>
             ) : (
               <ScrollView className="characters-scroll" scrollX showScrollbar={false}>
-                {characterList.map((char, index) => (
+                {characterList.map((char) => (
                   <View
                     key={char.name}
                     className="character-card"
@@ -235,7 +241,7 @@ export default function Index() {
                   <Text className="card-count">{cat.count}</Text>
                 </View>
                 <View className="card-icon-bg" style={{ backgroundColor: cat.color }}>
-                  <Text className="card-icon" style={{ color: cat.iconColor }}>{cat.icon}</Text>
+                  <Icon name={cat.icon} size={28} color={cat.iconColor} />
                 </View>
               </View>
             ))}
@@ -264,10 +270,13 @@ export default function Index() {
               </View>
 
               <View className="quote-actions">
-                <Text className="action-share" onClick={(e) => { e.stopPropagation(); handleShareQuote(); }}>{generatingQuote ? '生成中...' : '分享此金句'}</Text>
+                <View className="action-left" onClick={(e) => { e.stopPropagation(); handleShareQuote(); }}>
+                  <Icon name="share" size={16} color="#485a6c" />
+                  <Text className="action-text">{generatingQuote ? '生成中...' : '分享此金句'}</Text>
+                </View>
                 <View className="action-right" onClick={handleMoreQuotes}>
                   <Text className="action-text">查看更多金句</Text>
-                  <View className="action-btn">→</View>
+                  <Icon name="arrowRight" size={16} color="#485a6c" />
                 </View>
               </View>
             </View>

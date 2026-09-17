@@ -114,7 +114,7 @@ export default function F6Graph({ data, onNodeTap, width = 375, height = 600 }: 
                             // 2. Fuzzy Hit: User clicked empty space, check if close enough to a node
                             const point = e.canvas || { x: e.x, y: e.y };
                             const nodes = graphRef.current.getNodes();
-                            let closest = null;
+                            let closest: any = null;
                             let minDist = Infinity;
                             const CLICK_THRESHOLD = 45; // Generous 45px radius (Node radius is ~27.5)
 
@@ -174,7 +174,7 @@ export default function F6Graph({ data, onNodeTap, width = 375, height = 600 }: 
     }, [data, inited]);
 
     return (
-        <View style={{ width: width + 'px', height: height + 'px' }}>
+        <View className="f6-graph-container" style={{ width: width + 'px', height: height + 'px', position: 'relative', zIndex: 1 }}>
             <Canvas
                 type="2d"
                 id="graph-canvas"

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Taro from '@tarojs/taro';
 import type {
     CharactersDB,
-    ItemsDB,
+    ItemsLiteDB,
     FactionsDB,
     FactionData,
     LocationsDB,
@@ -10,53 +10,57 @@ import type {
     SearchIndexDB,
     CharacterData,
     ItemData,
+    ItemDataLite,
     LocationData
 } from './dataTypes';
 
-// API 基础地址
-const API_BASE = 'https://shushu.host/jianlai/data';
+// API 基础地址（dev 模式下通过 config/dev.ts defineConstants 覆盖）
+// process.env.API_BASE 由 Taro defineConstants 在编译时做文本替换，运行时不存在
+const API_BASE = process.env.API_BASE || 'https://shushu.host/jianlai/data';
 
 // 默认头像 - 使用一个简洁的占位符
 export const DEFAULT_AVATAR = 'https://ui-avatars.com/api/?background=3a6ea6&color=fff&name=';
 
-// 本地头像映射 (WebP 格式)
+// 本地头像映射 (线上兜底资源包)
+const ASSET_BASE = 'https://shushu.host/jianlai';
+
 const LOCAL_AVATARS: Record<string, string> = {
-    '陈平安': `${API_BASE.replace('/data', '')}/img/avatars/陈平安头像.webp`,
-    '宁姚': `${API_BASE.replace('/data', '')}/img/avatars/宁姚头像.webp`,
-    '刘羡阳': `${API_BASE.replace('/data', '')}/img/avatars/刘羡阳头像.webp`,
-    '宋集薪': `${API_BASE.replace('/data', '')}/img/avatars/宋集薪头像.webp`,
-    '崔东山': `${API_BASE.replace('/data', '')}/img/avatars/崔东山头像.webp`,
-    '崔瀺': `${API_BASE.replace('/data', '')}/img/avatars/崔瀺头像.webp`,
-    '朱敛': `${API_BASE.replace('/data', '')}/img/avatars/朱敛头像.webp`,
-    '稚圭': `${API_BASE.replace('/data', '')}/img/avatars/稚圭头像.webp`,
-    '裴钱': `${API_BASE.replace('/data', '')}/img/avatars/裴钱头像.webp`,
-    '刘志茂': `${API_BASE.replace('/data', '')}/img/avatars/刘志茂头像.webp`,
-    '刘灞桥': `${API_BASE.replace('/data', '')}/img/avatars/刘灞桥头像.webp`,
-    '宋长镜': `${API_BASE.replace('/data', '')}/img/avatars/宋长镜头像.webp`,
-    '搬山猿': `${API_BASE.replace('/data', '')}/img/avatars/搬山猿头像.webp`,
-    '李二': `${API_BASE.replace('/data', '')}/img/avatars/李二头像.webp`,
-    '杨老头': `${API_BASE.replace('/data', '')}/img/avatars/杨老头头像.webp`,
-    '王朱': `${API_BASE.replace('/data', '')}/img/avatars/王朱头像.webp`,
-    '老道人': `${API_BASE.replace('/data', '')}/img/avatars/老道人头像.webp`,
-    '苻南华': `${API_BASE.replace('/data', '')}/img/avatars/苻南华头像.webp`,
-    '蔡金简': `${API_BASE.replace('/data', '')}/img/avatars/蔡金简头像.webp`,
-    '贺小凉': `${API_BASE.replace('/data', '')}/img/avatars/贺小凉头像.webp`,
-    '赵繇': `${API_BASE.replace('/data', '')}/img/avatars/赵繇头像.webp`,
-    '郑大风': `${API_BASE.replace('/data', '')}/img/avatars/郑大风头像.webp`,
-    '阮秀': `${API_BASE.replace('/data', '')}/img/avatars/阮秀头像.webp`,
-    '阮邛': `${API_BASE.replace('/data', '')}/img/avatars/阮邛头像.webp`,
-    '陆沉': `${API_BASE.replace('/data', '')}/img/avatars/陆沉头像.webp`,
-    '马苦玄': `${API_BASE.replace('/data', '')}/img/avatars/马苦玄头像.webp`,
-    '齐静春': `${API_BASE.replace('/data', '')}/img/avatars/齐静春头像.webp`,
-    '魏晋': `${API_BASE.replace('/data', '')}/img/avatars/魏晋头像.webp`,
-    '高大女子': `${API_BASE.replace('/data', '')}/img/avatars/高大女子头像.webp`,
-    '老妪': `${API_BASE.replace('/data', '')}/img/avatars/老妪头像.webp`,
-    '阿良': `${API_BASE.replace('/data', '')}/img/avatars/阿良头像.webp`,
-    '朱鹿': `${API_BASE.replace('/data', '')}/img/avatars/朱鹿头像.webp`,
-    '李宝瓶': `${API_BASE.replace('/data', '')}/img/avatars/李宝瓶头像.webp`,
-    '董水井': `${API_BASE.replace('/data', '')}/img/avatars/董水井头像.webp`,
-    '林守一': `${API_BASE.replace('/data', '')}/img/avatars/林守一头像.webp`,
-    '朱河': `${API_BASE.replace('/data', '')}/img/avatars/朱河头像.webp`,
+    '陈平安': `${ASSET_BASE}/img/avatars/陈平安头像.webp`,
+    '宁姚': `${ASSET_BASE}/img/avatars/宁姚头像.webp`,
+    '刘羡阳': `${ASSET_BASE}/img/avatars/刘羡阳头像.webp`,
+    '宋集薪': `${ASSET_BASE}/img/avatars/宋集薪头像.webp`,
+    '崔东山': `${ASSET_BASE}/img/avatars/崔东山头像.webp`,
+    '崔瀺': `${ASSET_BASE}/img/avatars/崔瀺头像.webp`,
+    '朱敛': `${ASSET_BASE}/img/avatars/朱敛头像.webp`,
+    '稚圭': `${ASSET_BASE}/img/avatars/稚圭头像.webp`,
+    '裴钱': `${ASSET_BASE}/img/avatars/裴钱头像.webp`,
+    '刘志茂': `${ASSET_BASE}/img/avatars/刘志茂头像.webp`,
+    '刘灞桥': `${ASSET_BASE}/img/avatars/刘灞桥头像.webp`,
+    '宋长镜': `${ASSET_BASE}/img/avatars/宋长镜头像.webp`,
+    '搬山猿': `${ASSET_BASE}/img/avatars/搬山猿头像.webp`,
+    '李二': `${ASSET_BASE}/img/avatars/李二头像.webp`,
+    '杨老头': `${ASSET_BASE}/img/avatars/杨老头头像.webp`,
+    '王朱': `${ASSET_BASE}/img/avatars/王朱头像.webp`,
+    '老道人': `${ASSET_BASE}/img/avatars/老道人头像.webp`,
+    '苻南华': `${ASSET_BASE}/img/avatars/苻南华头像.webp`,
+    '蔡金简': `${ASSET_BASE}/img/avatars/蔡金简头像.webp`,
+    '贺小凉': `${ASSET_BASE}/img/avatars/贺小凉头像.webp`,
+    '赵繇': `${ASSET_BASE}/img/avatars/赵繇头像.webp`,
+    '郑大风': `${ASSET_BASE}/img/avatars/郑大风头像.webp`,
+    '阮秀': `${ASSET_BASE}/img/avatars/阮秀头像.webp`,
+    '阮邛': `${ASSET_BASE}/img/avatars/阮邛头像.webp`,
+    '陆沉': `${ASSET_BASE}/img/avatars/陆沉头像.webp`,
+    '马苦玄': `${ASSET_BASE}/img/avatars/马苦玄头像.webp`,
+    '齐静春': `${ASSET_BASE}/img/avatars/齐静春头像.webp`,
+    '魏晋': `${ASSET_BASE}/img/avatars/魏晋头像.webp`,
+    '高大女子': `${ASSET_BASE}/img/avatars/高大女子头像.webp`,
+    '老妪': `${ASSET_BASE}/img/avatars/老妪头像.webp`,
+    '阿良': `${ASSET_BASE}/img/avatars/阿良头像.webp`,
+    '朱鹿': `${ASSET_BASE}/img/avatars/朱鹿头像.webp`,
+    '李宝瓶': `${ASSET_BASE}/img/avatars/李宝瓶头像.webp`,
+    '董水井': `${ASSET_BASE}/img/avatars/董水井头像.webp`,
+    '林守一': `${ASSET_BASE}/img/avatars/林守一头像.webp`,
+    '朱河': `${ASSET_BASE}/img/avatars/朱河头像.webp`,
     '李槐': `${API_BASE.replace('/data', '')}/img/avatars/李槐头像.webp`,
     '吴鸢': `${API_BASE.replace('/data', '')}/img/avatars/吴鸢头像.webp`,
     '于禄': `${API_BASE.replace('/data', '')}/img/avatars/于禄头像.webp`,
@@ -77,12 +81,42 @@ const LOCAL_AVATARS: Record<string, string> = {
 // 数据缓存
 const dataCache: Record<string, unknown> = {};
 
-// 通用数据加载函数 (使用 Taro.request 替代 fetch)
-async function loadData<T>(filename: string): Promise<T> {
+// 数据缓存
+interface CacheItem<T> {
+    data: T;
+    timestamp: number;
+}
+const CACHE_KEY_PREFIX = 'jianlai_data_v3_';
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+// 通用数据加载函数 (带缓存)
+async function loadData<T>(filename: string, strategy: 'cache-first' | 'network-first' = 'cache-first'): Promise<T> {
+    const cacheKey = `${CACHE_KEY_PREFIX}${filename}`;
+
+    // 1. Memory Cache
     if (dataCache[filename]) {
         return dataCache[filename] as T;
     }
 
+    // 2. Storage Cache (If strategy is cache-first)
+    if (strategy === 'cache-first') {
+        try {
+            const cached = Taro.getStorageSync(cacheKey) as CacheItem<T>;
+            if (cached && cached.data && cached.timestamp) {
+                const age = Date.now() - cached.timestamp;
+                if (age < CACHE_DURATION) {
+                    dataCache[filename] = cached.data; // Sync to memory
+                    // Silently update if older than 1 hour? Optional.
+                    // For now, adhere to "cache for 1 day".
+                    return cached.data;
+                }
+            }
+        } catch (e) {
+            console.error('Cache read error', e);
+        }
+    }
+
+    // 3. Network Fetch
     try {
         const response = await Taro.request({
             url: `${API_BASE}/${filename}`,
@@ -96,23 +130,76 @@ async function loadData<T>(filename: string): Promise<T> {
         }
 
         const data = response.data as T;
+
+        // Update Memory
         dataCache[filename] = data;
+
+        // Update Storage
+        try {
+            Taro.setStorage({
+                key: cacheKey,
+                data: {
+                    data,
+                    timestamp: Date.now()
+                }
+            });
+        } catch (e) {
+            console.warn('Cache write failed (quota exceeded?)', e);
+            // Optionally clear old cache here if needed
+        }
+
         return data;
     } catch (error) {
         console.error(`Error loading ${filename}:`, error);
+
+        // Fallback: If network fails, try to return expired cache if exists
+        try {
+            const cached = Taro.getStorageSync(cacheKey) as CacheItem<T>;
+            if (cached && cached.data) {
+                console.warn('Network failed, using expired cache for', filename);
+                return cached.data;
+            }
+        } catch (e) { }
+
         throw error;
     }
 }
 
+// 预加载所有核心数据 (渐进式分批，避免与首屏争抢带宽)
+export function preloadAllData() {
+    console.log('Starting silent preload...');
+
+    // batch1: 搜索索引优先（用户最可能立即使用搜索）
+    setTimeout(() => {
+        loadData('search_index.json').catch(err => console.warn('Preload batch 1 failed', err));
+    }, 1000);
+
+    // batch2: 人物 + 势力列表页数据
+    setTimeout(() => {
+        Promise.all([
+            loadData('characters_lite.json'),
+            loadData('factions.json'),
+        ]).catch(err => console.warn('Preload batch 2 failed', err));
+    }, 2000);
+
+    // batch3: 次要列表页数据
+    setTimeout(() => {
+        Promise.all([
+            loadData('items_lite.json'),
+            loadData('locations.json'),
+        ]).catch(err => console.warn('Preload batch 3 failed', err));
+    }, 4000);
+}
+
 // 获取人物头像
 export function getAvatar(character: CharacterData): string {
-    // 1. 优先使用本地高清头像
-    if (LOCAL_AVATARS[character.name]) {
-        return LOCAL_AVATARS[character.name];
-    }
-    // 2. 其次使用数据中的头像链接
+    // 1. V3 Data Priority
     if (character.avatar) {
         return character.avatar;
+    }
+    // 2. Fallback to Local Avatars (Legacy)
+    if (LOCAL_AVATARS[character.name]) {
+        return LOCAL_AVATARS[character.name];
     }
     // 3. 最后使用 UI Avatars 服务生成基于名字的头像
     return DEFAULT_AVATAR + encodeURIComponent(character.name);
@@ -123,17 +210,20 @@ import itemImages from './itemImages';
 
 const SITE_BASE = 'https://shushu.host';
 
-export function getItemIcon(item: ItemData): string {
-    // 优先使用 itemImages 中定义的远程 URL
+export function getItemIcon(item: ItemData | ItemDataLite): string {
+    // 1. 优先使用 itemImages 中定义的特殊映射 (如果有)
     if (itemImages[item.name]) {
         return itemImages[item.name];
     }
-    // 如果数据中有 icon 字段（以 /jianlai/ 开头的路径）
+    // 2. 如果数据中有 icon 字段（强制覆盖）
     if (item.icon) {
         return `${SITE_BASE}${item.icon}`;
     }
-    // Fallback: 使用远程图片路径
-    return `${SITE_BASE}/jianlai/images/items/${encodeURIComponent(item.name)}.png`;
+
+    // 3. 默认使用生成的 WebP 图片
+    // Sanitize name: replace / with _ to match file system
+    const safeName = item.name.replace(/\//g, '_');
+    return `${SITE_BASE}/jianlai/img/items/${encodeURIComponent(safeName)}.webp`;
 }
 
 // Hook: 加载首页热门人物 (Top版 - 仅7KB)
@@ -151,7 +241,19 @@ export function useTopCharacters() {
 
     const characterList = useMemo(() => {
         if (!data) return [];
-        return Object.values(data) as CharacterData[];
+        return (Object.values(data) as CharacterData[])
+            .sort((a, b) => {
+                // Pin "陈平安" to the top
+                if (a.name === '陈平安') return -1;
+                if (b.name === '陈平安') return 1;
+
+                const countA = a.relationCount ?? 0;
+                const countB = b.relationCount ?? 0;
+                // Sort by Relation Count primarily (Weight 1000)
+                const scoreA = countA * 1000 + (a.quotes_count || 0) + (a.aliases_count || 0);
+                const scoreB = countB * 1000 + (b.quotes_count || 0) + (b.aliases_count || 0);
+                return scoreB - scoreA;
+            });
     }, [data]);
 
     return { data, characterList, loading, error };
@@ -175,11 +277,16 @@ export function useCharacters() {
         if (!data) return [];
         return (Object.values(data) as CharacterData[])
             .sort((a, b) => {
+                // Pin "陈平安" to the top
+                if (a.name === '陈平安') return -1;
+                if (b.name === '陈平安') return 1;
+
                 const countA = a.relationCount ?? Object.keys(a.relations || {}).length;
                 const countB = b.relationCount ?? Object.keys(b.relations || {}).length;
 
-                const scoreA = countA * 10 + a.quotes.length + a.aliases.length;
-                const scoreB = countB * 10 + b.quotes.length + b.aliases.length;
+                // Sort by Relation Count primarily (Weight 1000)
+                const scoreA = countA * 1000 + (a.quotes_count ?? a.quotes?.length ?? 0) + (a.aliases_count ?? a.aliases?.length ?? 0);
+                const scoreB = countB * 1000 + (b.quotes_count ?? b.quotes?.length ?? 0) + (b.aliases_count ?? b.aliases?.length ?? 0);
                 return scoreB - scoreA;
             });
     }, [data]);
@@ -200,7 +307,7 @@ export function useCharacter(name: string) {
         if (!name) return;
 
         setLoading(true);
-        loadData<CharacterData>(`chars/${name}.json`)
+        loadData<CharacterData>(`chars/${encodeURIComponent(name)}.json`)
             .then(setFullCharacter)
             .catch(err => {
                 console.warn(`Failed to load full data for ${name}, falling back to lite data`, err);
@@ -219,21 +326,26 @@ export function useCharacter(name: string) {
 const GRADE_WEIGHTS: Record<string, number> = {
     "神器": 100,
     "仙兵": 90,
+    "仙剑": 88,
     "半仙兵": 80,
     "法宝": 70,
     "灵器": 60,
-    "凡物": 50,
+    "灵物": 60,
+    "方寸物": 55,
+    "典籍": 50,
+    "货币": 50,
+    "凡物": 40,
     "未知": 0
 };
 
-// Hook: 加载法宝数据
+// Hook: 加载法宝数据 (Lite版)
 export function useItems() {
-    const [data, setData] = useState<ItemsDB | null>(null);
+    const [data, setData] = useState<ItemsLiteDB | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
-        loadData<ItemsDB>('items.json')
+        loadData<ItemsLiteDB>('items_lite.json')
             .then(setData)
             .catch(setError)
             .finally(() => setLoading(false));
@@ -241,33 +353,53 @@ export function useItems() {
 
     const itemList = useMemo(() => {
         if (!data) return [];
-        return (Object.values(data) as ItemData[]).sort((a, b) => {
+        return (Object.values(data) as ItemDataLite[]).sort((a, b) => {
             const gradeA = GRADE_WEIGHTS[a.grade as string] || 0;
             const gradeB = GRADE_WEIGHTS[b.grade as string] || 0;
             if (gradeA !== gradeB) return gradeB - gradeA;
 
-            const activeA = a.ownership_log?.length || 0;
-            const activeB = b.ownership_log?.length || 0;
+            // Use simplified ownership count
+            const activeA = a.ownership_count || 0;
+            const activeB = b.ownership_count || 0;
             if (activeA !== activeB) return activeB - activeA;
 
             return a.name.localeCompare(b.name, "zh-CN");
         });
     }, [data]);
 
-    // ... (existing useItems)
     return { data, itemList, loading, error };
 }
 
-// Hook: 获取单个法宝
+// Hook: 获取单个法宝 (Full Detail, with lite fallback)
 export function useItem(name: string) {
-    const { itemList, loading, error } = useItems();
-    const item = useMemo(() => {
-        return itemList.find(i => i.name === name) || null;
-    }, [itemList, name]);
-    return { item, loading, error };
+    const [item, setItem] = useState<ItemData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
+
+    // Try lite list first for immediate display (same pattern as useCharacter)
+    const { data: itemsLite } = useItems();
+    const liteItem = itemsLite?.[name] ? { ...itemsLite[name], name } as unknown as ItemData : null;
+
+    useEffect(() => {
+        if (!name) return;
+        setLoading(true);
+        const safeName = name.replace(/\//g, '_');
+        const encodedName = encodeURIComponent(safeName);
+
+        loadData<ItemData>(`items/${encodedName}.json`)
+            .then(setItem)
+            .catch((err) => {
+                // Full data failed, but lite may still be available
+                if (!liteItem) setError(err);
+            })
+            .finally(() => setLoading(false));
+    }, [name]);
+
+    const resolved = item || liteItem;
+    return { item: resolved, loading: loading && !resolved, error };
 }
 
-// Hook: 加载势力数据
+// Hook: 加载势力数据（使用构建时预计算的 score 排序，无需加载 characters）
 export function useFactions() {
     const [data, setData] = useState<FactionsDB | null>(null);
     const [loading, setLoading] = useState(true);
@@ -280,38 +412,17 @@ export function useFactions() {
             .finally(() => setLoading(false));
     }, []);
 
-    const { characterList } = useCharacters();
-
     const factionList = useMemo(() => {
-        if (!data || !characterList.length) return [];
-
-        const factionScores: Record<string, number> = {};
-        const factionMembers: Record<string, string[]> = {};
-
-        characterList.forEach(char => {
-            const charScore = Object.keys(char.relations).length * 10
-                + char.quotes.length
-                + char.aliases.length;
-
-            char.factions.forEach(fac => {
-                factionScores[fac] = (factionScores[fac] || 0) + charScore;
-                if (!factionMembers[fac]) factionMembers[fac] = [];
-                factionMembers[fac].push(char.name);
-            });
-        });
+        if (!data) return [];
 
         return (Object.values(data) as FactionData[])
-            .map(f => ({
-                ...f,
-                members: factionMembers[f.name] || [],
-                memberCount: (factionMembers[f.name] || []).length
-            }))
             .sort((a, b) => {
-                const scoreA = factionScores[a.name] || 0;
-                const scoreB = factionScores[b.name] || 0;
-                return scoreB - scoreA;
+                const scoreA = a.score || 0;
+                const scoreB = b.score || 0;
+                if (scoreA !== scoreB) return scoreB - scoreA;
+                return a.name.localeCompare(b.name, 'zh-CN');
             });
-    }, [data, characterList]);
+    }, [data]);
 
     return { data, factionList, loading, error };
 }
@@ -393,28 +504,50 @@ export function useTimeline() {
 }
 
 // Import local graph data
-import relationsData from './relations.json';
+// Imports removed to reduce bundle size
+// import relationsData from './relations.json';
+// import itemsEnrichedData from './items_enriched.json';
 
 // Hook: 加载关系图谱数据
+// Hook: 加载关系图谱数据
 export function useRelations() {
-    // In migrated Taro version, we bundle the graph data to avoid 404 on remote
-    return { data: relationsData, loading: false, error: null };
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
+
+    useEffect(() => {
+        loadData('relations.json')
+            .then(setData)
+            .catch(setError)
+            .finally(() => setLoading(false));
+    }, []);
+
+    return { data, loading, error };
 }
 
 // Hook: 搜索功能
+// Hook: 搜索功能
 export function useSearch() {
     const [index, setIndex] = useState<SearchIndexDB | null>(null);
+    const [factions, setFactions] = useState<FactionsDB | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadData<SearchIndexDB>('search_index.json')
-            .then(setIndex)
-            .catch(console.error)
+        const p1 = loadData<SearchIndexDB>('search_index.json');
+        const p2 = loadData<FactionsDB>('factions.json');
+
+        Promise.allSettled([p1, p2])
+            .then(([indexResult, factionsResult]) => {
+                if (indexResult.status === 'fulfilled') setIndex(indexResult.value);
+                else console.error('search_index.json load failed:', indexResult.reason);
+                if (factionsResult.status === 'fulfilled') setFactions(factionsResult.value);
+                else console.error('factions.json load failed (search will still work):', factionsResult.reason);
+            })
             .finally(() => setLoading(false));
     }, []);
 
     const search = (query: string, limit = 20) => {
-        if (!index || !query.trim()) return [];
+        if ((!index && !factions) || !query.trim()) return [];
 
         const calculateScore = (item: { name: string; id: string; weight: number }, queryLower: string) => {
             const nameLower = item.name.toLowerCase();
@@ -437,23 +570,47 @@ export function useSearch() {
         };
 
         const lowerQuery = query.toLowerCase();
-        const results: { name: string; type: string; id: string; weight: number; score: number }[] = [];
+        // Use a Map to deduplicate by id+type
+        const resultsMap = new Map<string, { name: string; type: string; id: string; weight: number; score: number }>();
 
-        for (const name of Object.keys(index)) {
-            if (name.toLowerCase().includes(lowerQuery)) {
-                const entry = index[name];
-                const item = {
-                    name,
-                    type: entry.type,
-                    id: entry.id,
-                    weight: entry.weight || 0
-                };
-                const score = calculateScore(item, lowerQuery);
-
-                results.push({ ...item, score });
+        // 1. Search in Index
+        if (index) {
+            for (const name of Object.keys(index)) {
+                if (name.toLowerCase().includes(lowerQuery)) {
+                    const entry = index[name];
+                    const item = {
+                        name,
+                        type: entry.type,
+                        id: entry.id,
+                        weight: entry.weight || 0
+                    };
+                    const score = calculateScore(item, lowerQuery);
+                    resultsMap.set(`${item.type}-${item.id}`, { ...item, score });
+                }
             }
         }
 
+        // 2. Search in Factions (Patch for missing factions in index)
+        if (factions) {
+            for (const name of Object.keys(factions)) {
+                if (name.toLowerCase().includes(lowerQuery)) {
+                    const item = {
+                        name,
+                        type: 'faction', // Enforce type
+                        id: name, // Faction ID is usually its name
+                        weight: 80 // Default weight for patched factions
+                    };
+                    const score = calculateScore(item, lowerQuery);
+
+                    // If this faction is already in results (from index), we keep the one with higher score?
+                    // Or just overwrite? Since index might have wrong type (Location), we should ALLOW adding 'faction' type even if 'location' type exists.
+                    // The Map key is `${item.type}-${item.id}`, so "faction-落魄山" and "location-落魄山" will coexist. Correct.
+                    resultsMap.set(`${item.type}-${item.id}`, { ...item, score });
+                }
+            }
+        }
+
+        const results = Array.from(resultsMap.values());
         results.sort((a, b) => b.score - a.score);
 
         return results.slice(0, limit);
@@ -462,37 +619,52 @@ export function useSearch() {
     return { search, loading };
 }
 
-// Hook: 随机金句
-export function useRandomQuote() {
-    const { characterList, loading } = useCharacters();
+// Hook: 金句加载
+// full=false (默认): 双阶段加载，先 quotes_top.json 快速展示，5秒后懒加载完整版（首页用）
+// full=true: 直接加载完整版 quotes.json，含 tags 字段（语录列表页用）
+export function useQuotes(options?: { full?: boolean }) {
+    const full = options?.full ?? false;
+    const [data, setData] = useState<any[] | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
 
-    const randomQuotes = useMemo(() => {
-        if (!characterList.length) return [];
-
-        // 1. 收集所有金句
-        const allQuotes: { content: string; author: string; id: string }[] = [];
-        characterList.forEach(char => {
-            if (char.quotes && char.quotes.length > 0) {
-                char.quotes.forEach((q, idx) => {
-                    if (q.content) {
-                        allQuotes.push({
-                            content: q.content,
-                            author: char.name,
-                            id: `${char.name}-${idx}`
-                        });
-                    }
-                });
-            }
-        });
-
-        // 2. 随机打乱 (Fisher-Yates Shuffle)
-        for (let i = allQuotes.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [allQuotes[i], allQuotes[j]] = [allQuotes[j], allQuotes[i]];
+    useEffect(() => {
+        if (full) {
+            // 直接加载完整版金句（含 tags）
+            loadData<any[]>('quotes.json')
+                .then(quotes => {
+                    const shuffled = [...quotes].sort(() => 0.5 - Math.random());
+                    setData(shuffled);
+                })
+                .catch(setError)
+                .finally(() => setLoading(false));
+            return;
         }
 
-        return allQuotes;
-    }, [characterList]);
+        // 阶段1：加载轻量版金句 (~22KB)，快速展示
+        loadData<any[]>('quotes_top.json')
+            .then(quotes => {
+                const shuffled = [...quotes].sort(() => 0.5 - Math.random());
+                setData(shuffled);
+            })
+            .catch(setError)
+            .finally(() => setLoading(false));
 
-    return { quotes: randomQuotes, loading };
+        // 阶段2：延迟加载完整版金句，替换数据
+        const timer = setTimeout(() => {
+            loadData<any[]>('quotes.json')
+                .then(quotes => {
+                    const shuffled = [...quotes].sort(() => 0.5 - Math.random());
+                    setData(shuffled);
+                })
+                .catch(err => console.warn('Full quotes load failed, using top quotes', err));
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [full]);
+
+    return { quotes: data || [], loading, error };
 }
+
+// Deprecated alias for compatibility
+export const useRandomQuote = useQuotes;

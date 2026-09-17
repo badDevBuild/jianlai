@@ -34,32 +34,21 @@ export interface F6Data {
  * Filter the graph data to show only the center node and its direct neighbors.
  * This implements the "Ego-Centric" view.
  */
-// Colors for different relationship types
-// Colors for different relationship types (Ink Wash Palette)
-export const RELATION_COLORS: Record<string, string> = {
-    // 师徒 - Ochre (赭石)
-    '师徒': '#b8860b',
-    '弟子': '#b8860b',
-    '先生': '#b8860b',
-    '学生': '#b8860b',
-    // 情侣 - Rouge (胭脂)
-    '情侣': '#c76a79',
-    '夫妻': '#c76a79',
-    '喜欢': '#c76a79',
-    // 朋友 - Bamboo (竹青)
-    '朋友': '#5d7a5d',
-    '好友': '#5d7a5d',
-    '兄弟': '#5d7a5d',
-    // 敌对 - Dark Ink (浓墨) - Distinct from Center Node Red
-    '敌对': '#333333',
-    '死敌': '#333333',
-    '仇人': '#333333',
-    '问剑': '#333333',
-    // 家人 - Moon White/Indigo (月白/靛青)
-    '家人': '#485a6c',
-    '亲人': '#485a6c',
-    // 护道人 - Grape (紫檀)
-    '护道人': '#6b4c6e',
+// 关系语义类别 → 颜色（与 relation_type_map.json 同步）
+export const CATEGORY_COLORS: Record<string, string> = {
+    '情感': '#c76a79',  // 胭脂
+    '师徒': '#b8860b',  // 赭石
+    '友谊': '#5d7a5d',  // 竹青
+    '敌对': '#333333',  // 浓墨
+    '血亲': '#485a6c',  // 靛青
+    '主从': '#6b4c6e',  // 紫檀
+    '同门': '#7a6e5d',  // 栗壳
+    '击杀': '#8b0000',  // 暗红
+    '上下级': '#4a5568', // 铁灰
+    '合作': '#6b8e7b',  // 青铜
+    '敬畏': '#8b7355',  // 古铜
+    '对抗': '#5a5a5a',  // 灰墨
+    '其他': '#c0bdb5',  // 清墨
 };
 
 const DEFAULT_EDGE_COLOR = '#e0e0e0'; // Faint Ink (清墨) for others
@@ -89,6 +78,13 @@ export function getEgoGraph(fullData: any[], centerId: string, activeFilters: st
             const relation = Array.isArray(item.relation) ? item.relation[0] : (item.relation || '');
             return activeFilters.includes(relation);
         });
+    }
+
+    // Limit to top 100 relationships by strength to prevent rendering performance issues
+    // (e.g. Chen Ping'an has 700+ relations)
+    connectedEdges.sort((a, b) => (b.strength || b.weight || 0) - (a.strength || a.weight || 0));
+    if (connectedEdges.length > 100) {
+        connectedEdges = connectedEdges.slice(0, 100);
     }
 
     if (connectedEdges.length === 0) {
@@ -131,9 +127,9 @@ export function getEgoGraph(fullData: any[], centerId: string, activeFilters: st
             );
 
             if (edge) {
-                const relation = Array.isArray(edge.relation) ? edge.relation[0] : (edge.relation || '');
-                if (RELATION_COLORS[relation]) {
-                    fillColor = RELATION_COLORS[relation];
+                const category = edge.category || '其他';
+                if (CATEGORY_COLORS[category]) {
+                    fillColor = CATEGORY_COLORS[category];
                 }
             }
         }
@@ -157,10 +153,11 @@ export function getEgoGraph(fullData: any[], centerId: string, activeFilters: st
         };
     });
 
-    // 4. Construct Edges with dynamic colors
+    // 4. Construct Edges with dynamic colors (using pre-computed category)
     const edges: F6Edge[] = connectedEdges.map(item => {
         const relation = Array.isArray(item.relation) ? item.relation[0] : (item.relation || '');
-        const color = RELATION_COLORS[relation] || DEFAULT_EDGE_COLOR;
+        const category = item.category || '其他';
+        const color = CATEGORY_COLORS[category] || DEFAULT_EDGE_COLOR;
 
         return {
             source: item.source,
@@ -177,27 +174,4 @@ export function getEgoGraph(fullData: any[], centerId: string, activeFilters: st
     console.log(`getEgoGraph: Generated ${nodes.length} nodes and ${edges.length} edges`);
 
     return { nodes, edges };
-}
-
-/**
- * Extract distinct relationship types for the current center node.
- */
-export function getAvailableRelationTypes(fullData: any[], centerId: string): string[] {
-    if (!Array.isArray(fullData) || fullData.length === 0) {
-        return [];
-    }
-
-    const connectedEdges = fullData.filter(item =>
-        item.source === centerId || item.target === centerId
-    );
-
-    const types = new Set<string>();
-    connectedEdges.forEach(item => {
-        const relation = Array.isArray(item.relation) ? item.relation[0] : (item.relation || '');
-        if (relation) {
-            types.add(relation);
-        }
-    });
-
-    return Array.from(types);
 }

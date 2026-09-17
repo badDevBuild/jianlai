@@ -1,10 +1,12 @@
 import { View, Text, Image, ScrollView, Canvas } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useCharacter, getAvatar, useFactions, useCharacters } from '../../data/useData';
 import { useAppShare } from '../../utils/share';
 import { generateCard, CardData } from '../../utils/cardGenerator';
+import { trackPageView, trackCardGenerate, trackCardSave } from '../../utils/analytics';
 import UgcEntry from '../../components/UgcEntry';
+import Icon from '../../components/Icon';
 import './index.scss';
 
 export default function CharacterDetail() {
@@ -15,6 +17,7 @@ export default function CharacterDetail() {
         title: `【剑来·人物】${name}的生平事迹`,
         path: `/pages/character-detail/index?name=${encodeURIComponent(name)}`
     });
+    useEffect(() => { trackPageView('/pages/character-detail/index', name); }, [name]);
 
     const { character, loading, error } = useCharacter(name);
     const { factionList } = useFactions(); // Get global faction data for weights
@@ -242,6 +245,7 @@ export default function CharacterDetail() {
                         };
 
                         const tempPath = await generateCard(canvasNode, cardData, dpr);
+                        trackCardGenerate('character', character.name);
                         setCardImagePath(tempPath);
                         setShowCardPreview(true);
                     } catch (err) {
@@ -263,6 +267,7 @@ export default function CharacterDetail() {
         Taro.saveImageToPhotosAlbum({
             filePath: cardImagePath,
             success: () => {
+                trackCardSave('character', name);
                 Taro.showToast({ title: '已保存到相册', icon: 'success' });
             },
             fail: (err) => {
@@ -323,11 +328,11 @@ export default function CharacterDetail() {
                 <View className="realm-info-content" onClick={e => e.stopPropagation()}>
                     <View className="realm-info-header">
                         <Text className="realm-info-title">境界划分说明</Text>
-                        <View className="close-btn" onClick={() => setShowRealmInfo(false)}>×</View>
+                        <View className="close-btn" onClick={() => setShowRealmInfo(false)}><Icon name="close" size={20} color="#666666" /></View>
                     </View>
                     <ScrollView scrollY className="realm-info-body">
                         <View className="realm-section">
-                            <Text className="section-title">⚔️ 武道九境 (含传说)</Text>
+                            <Text className="section-title">武道九境 (含传说)</Text>
                             <View className="realm-list">
                                 <View className="realm-item">
                                     <Text className="label">炼体三境：</Text>
@@ -353,7 +358,7 @@ export default function CharacterDetail() {
                         </View>
 
                         <View className="realm-section">
-                            <Text className="section-title">✨ 炼气士 (修士)</Text>
+                            <Text className="section-title">炼气士 (修士)</Text>
                             <View className="realm-list">
                                 <View className="realm-item">
                                     <Text className="label">下五境：</Text>
@@ -432,7 +437,7 @@ export default function CharacterDetail() {
                     )}
 
                     {/* Expandable Aliases */}
-                    {character.aliases?.length > 0 && (
+                    {(character.aliases?.length ?? 0) > 0 && (
                         <View className="aliases-container" onClick={() => hasMoreAliases && setAliasesExpanded(!aliasesExpanded)}>
                             <Text className="aliases-text">
                                 {displayedAliases.join(' / ')}
@@ -445,11 +450,19 @@ export default function CharacterDetail() {
                     )}
                 </View>
 
-                <View
-                    className={`action-card-btn ${generating ? 'disabled' : ''}`}
-                    onClick={handleGenerateCard}
-                >
-                    <Text>{generating ? '生成中...' : '分享此人物卡片'}</Text>
+                <View className="action-btn-row">
+                    <View
+                        className={`action-card-btn ${generating ? 'disabled' : ''}`}
+                        onClick={handleGenerateCard}
+                    >
+                        <Text>{generating ? '生成中...' : '分享卡片'}</Text>
+                    </View>
+                    <View
+                        className="action-card-btn vs-btn"
+                        onClick={() => Taro.navigateTo({ url: `/pages/compare/index?char1=${encodeURIComponent(name)}` })}
+                    >
+                        <Text>VS 对比</Text>
+                    </View>
                 </View>
             </View>
 
@@ -459,7 +472,7 @@ export default function CharacterDetail() {
                 <View className="section-header-row" onClick={() => setShowRealmInfo(true)}>
                     <Text className="section-title">修为境界</Text>
                     <View className="info-icon">
-                        <Text className="icon-text">?</Text>
+                        <Icon name="help" size={16} color="#999999" />
                     </View>
                 </View>
 
@@ -467,7 +480,7 @@ export default function CharacterDetail() {
                     {/* Martial Arts */}
                     <View className="cultivation-track">
                         <View className="track-header">
-                            <View className="track-icon martial"><Text>⚔️</Text></View>
+                            <View className="track-icon martial"><Icon name="swords" size={18} color="#ffffff" /></View>
                             <Text className="track-name">武道</Text>
                         </View>
                         <View className="track-bar-container">
@@ -486,7 +499,7 @@ export default function CharacterDetail() {
                     {/* Qi Refining */}
                     <View className="cultivation-track">
                         <View className="track-header">
-                            <View className="track-icon qi"><Text>✨</Text></View>
+                            <View className="track-icon qi"><Icon name="qi" size={18} color="#ffffff" /></View>
                             <Text className="track-name">练气士</Text>
                         </View>
                         <View className="track-bar-container">
@@ -630,7 +643,7 @@ export default function CharacterDetail() {
 
             {/* Quotes - Expandable to 50 */}
             {
-                character.quotes?.length > 0 && (
+                (character.quotes?.length ?? 0) > 0 && (
                     <View className="detail-section">
                         <View className="section-header-row">
                             <Text className="section-title">经典语录</Text>

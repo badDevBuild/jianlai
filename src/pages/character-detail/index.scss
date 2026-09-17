@@ -1,14 +1,5 @@
 @import '../../styles/theme.scss';
 
-// 人物详情页样式
-
-$primary-color: #3a6ea6; // This variable is still defined but its usage is replaced by theme variables below.
-$bg-light: #f5f5f5; // This variable is still defined but its usage is replaced by theme variables below.
-$text-primary: #333; // This variable is still defined but its usage is replaced by theme variables below.
-$text-secondary: #666; // This variable is still defined but its usage is replaced by theme variables below.
-$text-light: #999; // This variable is still defined but its usage is replaced by theme variables below.
-
-@import '../../styles/theme.scss';
 
 .detail-page {
     min-height: 100vh;
@@ -32,8 +23,8 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 64px 40px 48px;
-    background: linear-gradient(to bottom, #fff, rgba(255, 255, 255, 0.5));
+    padding: $spacing-xxl $spacing-xl-sm $spacing-xl;
+    background: linear-gradient(to bottom, $paper-light, rgba($paper-light, 0.5));
     border-bottom: 2px solid rgba($ink-dark, 0.05);
     margin-bottom: 40px;
 
@@ -47,7 +38,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
             width: 440px; // Much larger
             height: 580px; // Portrait ratio ~3:4
             border-radius: 24px;
-            border: 8px solid #fff;
+            border: 8px solid $paper-light;
             background: $paper-white;
             display: block; // Fix layout
         }
@@ -65,6 +56,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
             font-family: "Songti SC", serif;
             margin-bottom: 24px;
             letter-spacing: 4px;
+            @include text-ellipsis;
         }
 
         .faction-tags {
@@ -96,7 +88,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
                 &.rank-common {
                     color: $ink-light;
                     border: 1px solid rgba($ink-light, 0.2);
-                    background: #f8f8f8;
+                    background: $paper-white;
                 }
             }
         }
@@ -138,7 +130,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
         .section-title {
             font-size: 34px;
             font-weight: 600;
-            color: #333;
+            color: $ink-main;
             margin-right: 12px;
         }
 
@@ -146,24 +138,22 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            border: 2px solid #999;
+            border: 2px solid $ink-light;
             display: flex;
             align-items: center;
             justify-content: center;
 
             .icon-text {
                 font-size: 24px;
-                color: #999;
+                color: $ink-light;
                 font-weight: bold;
             }
         }
     }
 
     .cultivation-card {
-        background: #fff;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        @include ink-card;
+        padding: $spacing-md;
 
         .cultivation-track {
             margin: 12px 0;
@@ -181,13 +171,13 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
                 .track-name {
                     font-size: 28px;
                     font-weight: 500;
-                    color: #333;
+                    color: $ink-main;
                 }
             }
 
             .track-bar-container {
                 height: 12px;
-                background: #f0f0f0;
+                background: $paper-white;
                 border-radius: 6px;
                 overflow: hidden;
                 margin-bottom: 8px;
@@ -197,18 +187,18 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
                     border-radius: 6px;
 
                     &.martial {
-                        background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+                        background: linear-gradient(90deg, rgba($cinnabar, 0.5) 0%, rgba($cinnabar, 0.2) 100%);
                     }
 
                     &.qi {
-                        background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+                        background: linear-gradient(90deg, rgba($indigo, 0.6) 0%, rgba($indigo, 0.2) 100%);
                     }
                 }
             }
 
             .track-status {
                 font-size: 26px;
-                color: #333;
+                color: $ink-main;
                 font-weight: 500;
                 text-align: right;
                 display: block;
@@ -217,7 +207,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
 
         .track-chapter {
             font-size: 22px;
-            color: #999;
+            color: $ink-light;
             margin-top: -8px;
             margin-bottom: 16px;
             display: block;
@@ -225,8 +215,8 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
 
         .divider {
             height: 1px;
-            background: #eee;
-            margin: 24px 0;
+            background: $ink-faint;
+            margin: $spacing-md 0;
         }
     }
 }
@@ -239,7 +229,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+    z-index: $z-index-overlay;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -247,36 +237,36 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
     .realm-info-content {
         width: 85%;
         max-height: 80vh;
-        background: #fff;
-        border-radius: 20px;
+        background: $paper-light;
+        border-radius: $border-radius-md;
         overflow: hidden;
         display: flex;
         flex-direction: column;
 
         .realm-info-header {
             padding: 24px 32px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid $ink-faint;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #f9f9f9;
+            background: $paper-white;
 
             .realm-info-title {
                 font-size: 32px;
                 font-weight: 600;
-                color: #333;
+                color: $ink-main;
             }
 
             .close-btn {
                 font-size: 40px;
-                color: #999;
+                color: $ink-light;
                 line-height: 1;
                 padding: 0 10px;
             }
         }
 
         .realm-info-body {
-            padding: 32px;
+            padding: $spacing-lg;
             box-sizing: border-box;
 
             .realm-section {
@@ -286,9 +276,9 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
                     display: block;
                     font-size: 30px;
                     font-weight: 600;
-                    color: #333;
+                    color: $ink-main;
                     margin-bottom: 16px;
-                    border-left: 8px solid #a18cd1;
+                    border-left: 8px solid $indigo;
                     padding-left: 12px;
                 }
 
@@ -300,13 +290,13 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
                         line-height: 1.5;
 
                         .label {
-                            color: #666;
+                            color: $ink-medium;
                             font-weight: 500;
                             min-width: 160px;
                         }
 
                         .value {
-                            color: #333;
+                            color: $ink-main;
                             flex: 1;
                         }
                     }
@@ -318,7 +308,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
 
 // 通用区块
 .detail-section {
-    padding: 0 40px;
+    padding: 0 $spacing-xl-sm;
     margin-bottom: 64px;
 
     .section-header-row {
@@ -355,13 +345,11 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
     }
 
     .section-content {
-        background: #fff;
-        border-radius: 24px;
-        padding: 32px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        @include ink-card;
+        padding: $spacing-lg;
 
         &.paper-texture {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://shushu.host/jianlai/assets/paper-texture.jpg');
+            background-image: linear-gradient(rgba($paper-light, 0.9), rgba($paper-light, 0.9)), url('https://shushu.host/jianlai/assets/paper-texture.jpg');
             background-size: cover;
         }
 
@@ -399,7 +387,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
             height: 120px;
             border-radius: 50%;
             border: 4px solid $cinnabar;
-            background: #fff;
+            background: $paper-light;
             margin-bottom: 8px;
         }
 
@@ -455,13 +443,13 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
                 height: 90px;
                 border-radius: 50%;
                 border: 2px solid $indigo;
-                background: #fff;
+                background: $paper-light;
                 margin-bottom: 4px;
             }
 
             .node-info {
                 text-align: center;
-                background: rgba(255, 255, 255, 0.9);
+                background: rgba($paper-light, 0.9);
                 padding: 4px 8px;
                 border-radius: 8px;
                 white-space: nowrap; // Prevent wrapping
@@ -471,12 +459,16 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
                     font-size: 22px;
                     color: $ink-dark;
                     font-weight: 500;
+                    @include text-ellipsis;
+                    max-width: 100px;
                 }
 
                 .node-rel {
                     display: block;
                     font-size: 18px;
                     color: $ink-light;
+                    @include text-ellipsis;
+                    max-width: 100px;
                 }
             }
         }
@@ -534,7 +526,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
 
     .tag-seal {
         padding: 8px 20px;
-        background: #fff;
+        background: $paper-light;
         color: $cinnabar;
         font-size: 26px;
         border: 2px solid $cinnabar;
@@ -550,7 +542,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
             right: 2px;
             width: 4px;
             height: 4px;
-            background: #fff;
+            background: $paper-light;
             border-radius: 50%;
             opacity: 0.5;
         }
@@ -588,8 +580,8 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
 
                 .tech-badge {
                     font-size: 20px;
-                    padding: 2px 8px;
-                    border-radius: 4px;
+                    padding: 6px 12px;
+                    border-radius: $border-radius-sm;
 
                     &.type {
                         background: rgba($indigo, 0.1);
@@ -613,10 +605,16 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
     }
 }
 
+// Action button row
+.action-btn-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    align-self: flex-end;
+}
+
 // Share Card Button (inside detail-header)
 .action-card-btn {
-    align-self: flex-end;
-    margin-top: 24px;
     padding: 8px 20px;
     border: 1px solid rgba($ink-light, 0.2);
     border-radius: 8px;
@@ -630,6 +628,15 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
     &.disabled {
         opacity: 0.5;
     }
+
+    &.vs-btn {
+        border-color: rgba($indigo, 0.3);
+        color: $indigo;
+
+        &:active {
+            background: rgba($indigo, 0.05);
+        }
+    }
 }
 
 // Card Preview Modal
@@ -640,7 +647,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.75);
-    z-index: 1000;
+    z-index: $z-index-overlay;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -654,7 +661,7 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
 
         .card-preview-image {
             width: 100%;
-            border-radius: 16px;
+            border-radius: $border-radius-md;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
         }
 
@@ -671,12 +678,12 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
 
                 &.save-btn {
                     background: $cinnabar;
-                    color: #fff;
+                    color: $paper-light;
                 }
 
                 &.close-btn {
                     background: rgba(255, 255, 255, 0.2);
-                    color: #fff;
+                    color: $paper-light;
                     border: 1px solid rgba(255, 255, 255, 0.3);
                 }
             }
@@ -692,5 +699,5 @@ $text-light: #999; // This variable is still defined but its usage is replaced b
   justify-content: flex-end;
   margin-top: 12px;
   padding-top: 8px;
-  border-top: 1px dashed rgba(#6b5b4a, 0.1);
+  border-top: 1px dashed rgba($ink-medium, 0.1);
 }

@@ -47,3 +47,10 @@ page {
 $z-index-nav: 100;
 $z-index-mask: 90;
 $z-index-popup: 95;
+.ugc-footer-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(#6b5b4a, 0.1);
+}

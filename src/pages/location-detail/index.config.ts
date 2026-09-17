@@ -1,5 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '剑来地点',
+  navigationBarTitleText: '地点详情',
   enableShareAppMessage: true,
   enableShareTimeline: true,
 })

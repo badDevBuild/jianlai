@@ -4,9 +4,33 @@ import { useState, useMemo } from 'react';
 import { useFactions } from '../../data/useData';
 import { useAppShare } from '../../utils/share';
 import FilterBar from '../../components/FilterBar';
+import Icon from '../../components/Icon';
 import './index.scss';
 
 const PAGE_SIZE = 20;
+
+// 势力类型 → 图标映射
+const TYPE_ICON_MAP: Record<string, string> = {
+    '宗门': 'mountain',
+    '王朝': 'crown',
+    '家族': 'family',
+    '地方势力': 'shield',
+    '官方机构': 'official',
+    '江湖门派': 'jianghu',
+    '教派': 'doctrine',
+    '军事组织': 'military',
+    '跨界组织': 'crossworld',
+    '商业组织': 'commerce',
+    '神道势力': 'shrine',
+    '书院': 'academy',
+    '妖族势力': 'beast',
+    '组织': 'org',
+    '天下': 'globe',
+};
+
+function getFactionIcon(type?: string): string {
+    return TYPE_ICON_MAP[type || ''] || 'flag';
+}
 
 export default function FactionList() {
     const { factionList, loading } = useFactions();
@@ -106,13 +130,17 @@ export default function FactionList() {
                             >
                                 <View className="card-header">
                                     <View className="faction-icon">
-                                        <Text>🏔️</Text>
+                                        <Icon name={getFactionIcon(faction.type)} size={24} color="#485a6c" />
                                     </View>
                                     <View className="faction-info">
                                         <Text className="faction-name">{faction.name}</Text>
                                         <View className="faction-meta">
                                             {faction.type && <Text className="tag type-tag">{faction.type}</Text>}
-                                            {faction.location && <Text className="tag loc-tag">{faction.location}</Text>}
+                                            {faction.power_score != null && faction.power_score > 0 && (
+                                                <Text className={`tag power-tag power-${faction.power_score >= 2000 ? 'high' : faction.power_score >= 500 ? 'mid' : 'low'}`}>
+                                                    实力 {faction.power_score}
+                                                </Text>
+                                            )}
                                         </View>
                                     </View>
                                     <View className="member-badge">
@@ -121,16 +149,17 @@ export default function FactionList() {
                                     </View>
                                 </View>
 
+                                {faction.region && (
+                                    <View className="card-region">
+                                        <Text>{faction.region}</Text>
+                                    </View>
+                                )}
+
                                 {faction.description && (
                                     <View className="card-body">
                                         <Text className="faction-desc">{faction.description}</Text>
                                     </View>
                                 )}
-
-                                <View className="card-footer">
-                                    <Text className="view-more">查看详情</Text>
-                                    <Text className="arrow">→</Text>
-                                </View>
                             </View>
                         ))}
                     </View>

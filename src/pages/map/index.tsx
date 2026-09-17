@@ -1,5 +1,7 @@
-import { View, Text, Image, Button, MovableArea, MovableView } from '@tarojs/components';
+import { View, Text, Image, MovableArea, MovableView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
+import Icon from '../../components/Icon';
+import { useAppShare } from '../../utils/share';
 import './index.scss';
 
 // 使用远程图片资源，减少小程序包体积
@@ -15,6 +17,7 @@ const haoranMap = `${MAP_BASE}/haoran_map.png`;
 import { useState } from 'react';
 
 export default function MapPage() {
+    useAppShare({ title: '剑来光阴 - 万界地图', path: '/pages/map/index' });
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     const handlePreview = (url: string) => {
@@ -75,7 +78,7 @@ export default function MapPage() {
                         </MovableView>
                     </MovableArea>
                     <View className="close-btn" onClick={closePreview}>
-                        <Text>✕</Text>
+                        <Icon name="close" size={24} color="#ffffff" />
                     </View>
                 </View>
             )}

@@ -2,36 +2,66 @@ import { View, Text, ScrollView, Image } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useState, useMemo } from 'react';
 import { useCharacters, getAvatar } from '../../data/useData';
+import { useAppShare } from '../../utils/share';
+import FilterBar from '../../components/FilterBar';
 import './index.scss';
 
 const PAGE_SIZE = 20;
 
 export default function Characters() {
     const { characterList, loading, error } = useCharacters();
-    const [selectedFaction, setSelectedFaction] = useState<string | null>(null);
+    useAppShare({ title: '剑来光阴 - 1600+人物图鉴', path: '/pages/characters/index' });
+    const [selectedFactions, setSelectedFactions] = useState<string[]>([]);
     const [page, setPage] = useState(1);
 
-    // 获取所有派系 (Memoized)
+    // 获取所有派系 (Memoized & Simplified)
     const factions = useMemo(() => {
-        const factionSet = new Set<string>();
+        const factionCounts: Record<string, number> = {};
         characterList.forEach(char => {
             if (char.factions) {
-                char.factions.forEach(f => factionSet.add(f));
+                char.factions.forEach(f => {
+                    factionCounts[f] = (factionCounts[f] || 0) + 1;
+                });
             }
         });
-        return Array.from(factionSet).slice(0, 10);
+
+        // Whitelist of important factions to ALWAYS show
+        const HOT_FACTIONS = [
+            '落魄山', '剑气长城', '大骊王朝', '儒家', '道家', '佛家', '兵家',
+            '白玉京', '文庙', '蛮荒天下', '浩然天下', '青冥天下', '正阳山', '风雪庙'
+        ];
+
+        // Filter: Must be in HOT list OR have >= 3 members
+        return Object.keys(factionCounts)
+            .filter(f => HOT_FACTIONS.includes(f) || factionCounts[f] >= 3)
+            .sort((a, b) => {
+                const idxA = HOT_FACTIONS.indexOf(a);
+                const idxB = HOT_FACTIONS.indexOf(b);
+                // 1. Hot factions first
+                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                if (idxA !== -1) return -1;
+                if (idxB !== -1) return 1;
+                // 2. Then by member count (descending)
+                const diff = factionCounts[b] - factionCounts[a];
+                if (diff !== 0) return diff;
+                // 3. Alphabetical
+                return a.localeCompare(b, 'zh-CN');
+            });
     }, [characterList]);
 
     // 过滤人物
     const filteredCharacters = useMemo(() => {
         let result = characterList;
 
-        if (selectedFaction) {
-            result = result.filter(char => char.factions && char.factions.includes(selectedFaction));
+        if (selectedFactions.length > 0) {
+            // 只要包含选中的任意一个派系即可 (OR logic for user convenience)
+            result = result.filter(char =>
+                char.factions && char.factions.some(f => selectedFactions.includes(f))
+            );
         }
 
         return result;
-    }, [characterList, selectedFaction]);
+    }, [characterList, selectedFactions]);
 
     // 分页 + 数据瘦身 (关键优化：只返回渲染所需字段)
     const displayList = useMemo(() => {
@@ -52,7 +82,16 @@ export default function Characters() {
                 factions: char.factions, // 数组引用，通常较小
                 desc: desc,
                 tags: char.tags,
-                cultivation: (char.cultivation_log && char.cultivation_log.length > 0) ? char.cultivation_log[char.cultivation_log.length - 1].state : '', // 获取最新境界
+                cultivation: (() => {
+                    const c = char.cultivation;
+                    if (typeof c === 'string') return c;
+                    if (Array.isArray(c) && c.length > 0) {
+                        const last = c[c.length - 1];
+                        if (typeof last === 'string') return last;
+                        return (last as any).state || (last as any).realm || '';
+                    }
+                    return '';
+                })(),
                 relationCount: char.relationCount !== undefined ? char.relationCount : (char.relations ? Object.keys(char.relations).length : 0)
             };
         });
@@ -64,10 +103,18 @@ export default function Characters() {
         }
     };
 
-    // 重置分页当筛选条件改变时
-    useMemo(() => {
+    const handleToggleFaction = (faction: string) => {
         setPage(1);
-    }, [selectedFaction]);
+        setSelectedFactions(prev => {
+            if (prev.includes(faction)) return prev.filter(f => f !== faction);
+            return [faction]; // 单选体验较好，若要多选改为 [...prev, faction]
+        });
+    };
+
+    const handleResetFilter = () => {
+        setPage(1);
+        setSelectedFactions([]);
+    };
 
     const handleCharacterClick = (name: string) => {
         Taro.navigateTo({
@@ -94,23 +141,14 @@ export default function Characters() {
     return (
         <View className="characters-page">
             {/* 派系筛选 */}
-            <ScrollView className="faction-filter" scrollX>
-                <View
-                    className={`faction-tag ${!selectedFaction ? 'active' : ''}`}
-                    onClick={() => setSelectedFaction(null)}
-                >
-                    全部
-                </View>
-                {factions.map(fac => (
-                    <View
-                        key={fac}
-                        className={`faction-tag ${selectedFaction === fac ? 'active' : ''}`}
-                        onClick={() => setSelectedFaction(fac)}
-                    >
-                        {fac}
-                    </View>
-                ))}
-            </ScrollView>
+            <View className="filter-container">
+                <FilterBar
+                    items={factions}
+                    selectedItems={selectedFactions}
+                    onToggle={handleToggleFaction}
+                    onReset={handleResetFilter}
+                />
+            </View>
 
             {/* 人物列表 */}
             <View className="character-count">

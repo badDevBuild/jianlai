@@ -2,20 +2,30 @@ import { View, Text } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { useState, useMemo, useEffect } from 'react';
 import F6Graph from '../../components/Graph/F6Graph';
-import FilterBar from '../../components/FilterBar';
-import { useRelations } from '../../data/useData';
-import { getEgoGraph, getAvailableRelationTypes } from '../../utils/graph-adapter';
+import { useRelations, useCharacters } from '../../data/useData';
+import { getEgoGraph } from '../../utils/graph-adapter';
+import { useAppShare } from '../../utils/share';
 import './index.scss';
 
 export default function GraphPage() {
-    const { data: fullData, loading, error } = useRelations();
+    useAppShare({ title: '剑来光阴 - 人物关系图谱', path: '/pages/graph/index' });
+    const { data: fullData, loading: relLoading, error: relError } = useRelations();
+    const { data: allCharacters, loading: charLoading } = useCharacters();
+    const loading = relLoading || charLoading;
+    const error = relError;
+
+    // Filter relations to only keep person-to-person edges
+    const personOnlyData = useMemo(() => {
+        if (!fullData || !allCharacters) return [];
+        return fullData.filter(item => item.source in allCharacters && item.target in allCharacters);
+    }, [fullData, allCharacters]);
     const [centerId, setCenterId] = useState('陈平安');
-    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-    const [windowInfo, setWindowInfo] = useState(() => {
+    const [selectedFilters] = useState<string[]>([]);
+    const [windowInfo] = useState(() => {
         const info = Taro.getSystemInfoSync();
         return {
             width: info.windowWidth,
-            height: info.windowHeight
+            height: info.windowHeight // Full screen
         };
     });
 
@@ -27,17 +37,10 @@ export default function GraphPage() {
         }
     });
 
-    // Derive filter items from current center node relations
-    const filterItems = useMemo(() => {
-        if (!fullData) return [];
-        return getAvailableRelationTypes(fullData, centerId);
-    }, [fullData, centerId]);
-
     const graphData = useMemo(() => {
-        console.log('GraphPage: fullData received', fullData);
-        if (!fullData) return { nodes: [], edges: [] };
-        return getEgoGraph(fullData, centerId, selectedFilters);
-    }, [fullData, centerId, selectedFilters]);
+        if (!personOnlyData.length) return { nodes: [], edges: [] };
+        return getEgoGraph(personOnlyData, centerId, selectedFilters);
+    }, [personOnlyData, centerId, selectedFilters]);
 
     const handleNodeTap = (nodeId: string) => {
         if (nodeId === centerId) {
@@ -50,16 +53,6 @@ export default function GraphPage() {
         setTimeout(() => {
             setCenterId(nodeId);
         }, 10);
-    };
-
-    const handleFilterToggle = (item: string) => {
-        setSelectedFilters(prev => {
-            if (prev.includes(item)) {
-                return prev.filter(i => i !== item);
-            } else {
-                return [...prev, item];
-            }
-        });
     };
 
     // Hide loading when centerId changes (meaning data is processed)
@@ -92,18 +85,10 @@ export default function GraphPage() {
             <F6Graph
                 data={graphData}
                 width={windowInfo.width}
-                height={windowInfo.height} // Subtract filter bar height if needed, or overlay
+                height={windowInfo.height}
                 onNodeTap={handleNodeTap}
             />
 
-            <View className="graph-controls">
-                <FilterBar
-                    items={filterItems}
-                    selectedItems={selectedFilters}
-                    onToggle={handleFilterToggle}
-                    onReset={() => setSelectedFilters([])}
-                />
-            </View>
         </View>
     );
 }

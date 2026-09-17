@@ -19,34 +19,48 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 40px;
-  background: #fff;
-  border-bottom: 2px solid $ink-faint;
+  padding: $spacing-xxl $spacing-xl-sm $spacing-xl;
+  background: linear-gradient(to bottom, $paper-light, rgba($paper-light, 0.5));
+  border-bottom: 2px solid rgba($ink-dark, 0.05);
 
-  .header-icon {
-    font-size: 80px;
-    margin-bottom: 24px;
-    background: transparent; // Changed from #f5f5f5 to transparent for ink wash images
-    width: 200px; // Increased size
-    height: 200px;
-    border-radius: 0; // Removed circle
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none; // Removed border
+  .avatar-wrapper {
+    position: relative;
+    margin-bottom: 40px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+    border-radius: 24px;
 
-    .item-image {
-      width: 100%;
-      height: 100%;
+    .detail-avatar {
+      width: 440px;
+      height: 440px; // 正方形容器，配合 aspectFit
+      border-radius: 24px;
+      border: 8px solid $paper-light;
+      background: $paper-white;
+      display: block;
     }
   }
 
-  .detail-name {
-    font-size: 48px;
-    font-weight: bold;
-    color: $ink-dark;
-    font-family: "Songti SC", serif;
-    margin-bottom: 20px;
+  .detail-header-info {
+    text-align: center;
+    width: 100%;
+
+    .detail-name {
+      display: block;
+      font-size: 56px;
+      font-weight: bold;
+      color: $ink-dark;
+      font-family: "Songti SC", serif;
+      margin-bottom: 24px;
+      letter-spacing: 4px;
+      @include text-ellipsis;
+    }
+
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
   }
 
   .grade-pill {
@@ -56,39 +70,39 @@
     font-weight: 500;
 
     &.grade-shenqi {
-      background: rgba(184, 134, 11, 0.1);
-      color: #b8860b;
+      background: rgba($grade-divine, 0.1);
+      color: $grade-divine;
     }
 
     &.grade-xianbing {
-      background: rgba(156, 39, 176, 0.1);
-      color: #9c27b0;
+      background: rgba($grade-immortal, 0.1);
+      color: $grade-immortal;
     }
 
     &.grade-banxianbing {
-      background: rgba(156, 39, 176, 0.05);
-      color: #ba68c8;
+      background: rgba($grade-half-immortal, 0.08);
+      color: $grade-half-immortal;
     }
 
     &.grade-fabao {
-      background: rgba(33, 150, 243, 0.1);
-      color: #2196f3;
+      background: rgba($grade-treasure, 0.08);
+      color: $grade-treasure;
     }
 
     &.grade-lingqi {
-      background: rgba(76, 175, 80, 0.1);
-      color: #4caf50;
+      background: rgba($grade-spirit, 0.1);
+      color: $grade-spirit;
     }
 
     &.grade-normal {
-      background: rgba(158, 158, 158, 0.1);
-      color: #9e9e9e;
+      background: rgba($grade-mundane, 0.1);
+      color: $grade-mundane;
     }
   }
 }
 
 .detail-section {
-  padding: 40px;
+  padding: $spacing-xl-sm;
   border-bottom: 2px solid rgba($ink-dark, 0.03);
 
   .section-title {
@@ -108,6 +122,51 @@
       line-height: 1.8;
       color: $ink-main;
       text-align: justify;
+    }
+
+    .info-row {
+      display: flex;
+      margin-bottom: 16px;
+      font-size: 28px;
+      line-height: 1.6;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .info-label {
+        font-weight: bold;
+        color: $ink-light;
+        flex-shrink: 0;
+        margin-right: 12px;
+      }
+
+      .info-value {
+        color: $ink-dark;
+        flex: 1;
+        text-align: justify;
+      }
+    }
+
+    .info-block {
+      margin-bottom: 20px;
+      font-size: 28px;
+      line-height: 1.6;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .info-label-block {
+        display: inline-block;
+        font-weight: bold;
+        color: $ink-main;
+        margin-bottom: 8px;
+        background: rgba($ink-dark, 0.04);
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-size: 26px;
+      }
     }
   }
 }
@@ -145,13 +204,13 @@
       height: 24px;
       background: $indigo;
       border-radius: 50%;
-      border: 4px solid #fff;
+      border: 4px solid $paper-light;
       box-shadow: 0 0 0 2px $indigo;
       z-index: 2;
     }
 
     .timeline-content {
-      background: #f9f9f9;
+      background: $paper-white;
       padding: 24px;
       border-radius: 16px;
       display: flex;
@@ -168,6 +227,94 @@
       .chapter-ref {
         font-size: 24px;
         color: $ink-light;
+      }
+    }
+  }
+}
+
+.expand-button {
+  display: flex;
+  justify-content: center;
+  padding-top: 24px;
+  padding-bottom: 8px;
+
+  &:active {
+    opacity: 0.7;
+  }
+
+  text {
+    display: inline-block;
+    padding: 12px 48px;
+    background: $paper-white;
+    border-radius: 40px;
+    color: $ink-light;
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+}
+
+// 分享卡片按钮
+.share-card-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+
+  .share-card-text {
+    font-size: 24px;
+    color: $indigo;
+  }
+}
+
+// Card Preview Modal
+.card-preview-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: $z-index-overlay;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .card-preview-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 85%;
+    max-height: 90vh;
+
+    .card-preview-image {
+      width: 100%;
+      border-radius: $border-radius-md;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-preview-actions {
+      display: flex;
+      gap: 24px;
+      margin-top: 32px;
+
+      .card-action-btn {
+        padding: 16px 48px;
+        border-radius: 40px;
+        font-size: 28px;
+        font-weight: 500;
+
+        &.save-btn {
+          background: $cinnabar;
+          color: #fff;
+        }
+
+        &.close-btn {
+          background: rgba(255, 255, 255, 0.2);
+          color: #fff;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
       }
     }
   }

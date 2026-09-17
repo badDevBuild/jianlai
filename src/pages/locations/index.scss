@@ -8,9 +8,124 @@
   flex-direction: column;
 }
 
+// Breadcrumb navigation
+.breadcrumb-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: $spacing-sm $spacing-md;
+  background: $paper-light;
+  border-bottom: 1px solid rgba($ink-dark, 0.05);
+  flex-shrink: 0;
+  gap: 4px;
+
+  .breadcrumb-segment {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .breadcrumb-sep {
+    font-size: 22px;
+    color: $ink-light;
+    margin: 0 4px;
+  }
+
+  .breadcrumb-item {
+    font-size: 26px;
+    color: $indigo;
+    padding: 8px 16px;
+    border-radius: $border-radius-sm;
+
+    &:active {
+      background: rgba($indigo, 0.08);
+    }
+
+    &.root {
+      font-weight: 600;
+    }
+
+    &.current {
+      color: $ink-dark;
+      font-weight: 600;
+      background: rgba($ink-dark, 0.04);
+    }
+  }
+}
+
+// Current location banner (shown when drilled into a specific location)
+.current-location-banner {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  background: $paper-light;
+  border-bottom: 2px solid rgba($ink-dark, 0.04);
+
+  &:active {
+    background: $paper-white;
+  }
+
+  .banner-left {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .banner-icon {
+    font-size: 48px;
+    margin-right: 20px;
+    line-height: 1;
+  }
+
+  .banner-info {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .banner-name-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .banner-name {
+    font-size: 32px;
+    font-weight: 700;
+    color: $ink-dark;
+    font-family: "Songti SC", serif;
+    @include text-ellipsis;
+    flex: 1;
+  }
+
+  .banner-type-tag {
+    font-size: 20px;
+    color: $ink-medium;
+    background: rgba($ink-medium, 0.08);
+    padding: 4px 12px;
+    border-radius: 8px;
+  }
+
+  .banner-desc {
+    font-size: 24px;
+    color: $ink-light;
+    line-height: 1.5;
+    @include text-ellipsis-lines(2);
+  }
+
+  .banner-arrow {
+    font-size: 28px;
+    color: $ink-light;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+}
+
+// Main list area
 .list-content {
   flex: 1;
-  min-height: 0; // Critical for scrolling
+  min-height: 0;
   padding: $spacing-md $spacing-lg;
   box-sizing: border-box;
 
@@ -25,25 +140,29 @@
   }
 }
 
+.section-hint {
+  padding: 4px 8px 16px;
+  font-size: 22px;
+  color: $ink-light;
+}
+
 .location-grid {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   padding-bottom: 40px;
 }
 
 .location-card {
-  background: #fff;
-  border-radius: 24px;
-  padding: 28px 24px; // 增加上下padding
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  @include ink-card;
+  padding: $spacing-lg;
   display: flex;
-  align-items: flex-start; // 改为顶部对齐
+  align-items: center;
   border: 2px solid rgba($ink-dark, 0.02);
   transition: all 0.3s ease;
 
   &:active {
-    background: #fafafa;
+    background: $paper-white;
     transform: scale(0.99);
   }
 
@@ -54,12 +173,12 @@
     overflow: hidden;
 
     .icon-wrap {
-      font-size: 56px; // 稍微调大图标
-      margin-right: 24px;
-      width: 72px;
+      font-size: 48px;
+      margin-right: 20px;
+      width: 60px;
       text-align: center;
       line-height: 1;
-      padding-top: 4px; // 微调对齐
+      padding-top: 4px;
     }
 
     .info-wrap {
@@ -67,21 +186,23 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 8px; // 增加间距
+      gap: 8px;
 
       .name-row {
         display: flex;
         align-items: center;
         gap: 12px;
-        flex-wrap: wrap; // 允许换行
+        flex-wrap: wrap;
       }
 
       .loc-name {
-        font-size: 34px;
+        font-size: 32px;
         font-weight: 600;
         color: $ink-dark;
         font-family: "Songti SC", serif;
         line-height: 1.2;
+        @include text-ellipsis;
+        flex: 1;
       }
 
       .type-tag {
@@ -94,23 +215,34 @@
         height: fit-content;
       }
 
-      .loc-parent {
-        font-size: 24px;
-        color: $ink-medium;
-        background: rgba($bamboo, 0.05);
-        color: darken($bamboo, 10%);
-        padding: 4px 12px;
-        border-radius: 8px;
-        width: fit-content;
-      }
-
       .loc-desc {
-        font-size: 26px;
+        font-size: 24px;
         color: $ink-light;
         line-height: 1.5;
         @include text-ellipsis-lines(2);
-        margin-top: 4px;
       }
+    }
+  }
+
+  .child-count-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-left: 12px;
+    padding: 8px 12px;
+    border-radius: 16px;
+    background: rgba($indigo, 0.06);
+
+    .count-text {
+      font-size: 24px;
+      color: $indigo;
+      font-weight: 600;
+    }
+
+    .chevron {
+      font-size: 22px;
+      color: $indigo;
     }
   }
 }

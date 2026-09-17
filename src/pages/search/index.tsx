@@ -3,14 +3,15 @@ import Taro from '@tarojs/taro';
 import { useState, useMemo } from 'react';
 import { useSearch, getAvatar, getItemIcon, useCharacters, useItems } from '../../data/useData';
 import { useAppShare } from '../../utils/share';
+import Icon from '../../components/Icon';
 import './index.scss';
 
 // 类型图标映射
 const TYPE_ICONS: Record<string, string> = {
-    character: '👤',
-    item: '✨',
-    faction: '🏔️',
-    location: '📍',
+    character: 'person',
+    item: 'sparkle',
+    faction: 'mountain',
+    location: 'mapPin',
 };
 
 // 类型名称映射
@@ -81,7 +82,7 @@ export default function SearchPage() {
             {/* 搜索栏 */}
             <View className="search-header">
                 <View className="search-input-wrap">
-                    <Text className="search-icon">🔍</Text>
+                    <Icon name="search" size={18} color="#999999" />
                     <Input
                         className="search-input"
                         placeholder="搜索人物、法宝、宗派、地点..."
@@ -90,7 +91,7 @@ export default function SearchPage() {
                         focus
                     />
                     {query && (
-                        <Text className="clear-btn" onClick={() => handleSearch('')}>✕</Text>
+                        <View className="clear-btn" onClick={() => handleSearch('')}><Icon name="close" size={16} color="#999999" /></View>
                     )}
                 </View>
                 <View className="header-action" onClick={handleBack}>
@@ -147,7 +148,7 @@ export default function SearchPage() {
                                         </View>
                                     ) : (
                                         <View className={`result-icon-wrap type-${item.type}`}>
-                                            <Text className="result-icon">{TYPE_ICONS[item.type] || '📄'}</Text>
+                                            <Icon name={TYPE_ICONS[item.type] || 'scroll'} size={24} color="#666666" />
                                         </View>
                                     )}
 
@@ -156,7 +157,7 @@ export default function SearchPage() {
                                         <Text className="result-type">{TYPE_NAMES[item.type] || item.type}</Text>
                                     </View>
 
-                                    <View className="result-arrow">→</View>
+                                    <View className="result-arrow"><Icon name="arrowRight" size={16} color="#999999" /></View>
                                 </View>
                             );
                         })

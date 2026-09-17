@@ -4,7 +4,7 @@ import devConfig from './dev'
 import prodConfig from './prod'
 
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
-export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
+export default defineConfig<'webpack5'>(async (merge, _ctx) => {
   const baseConfig: UserConfigExport<'webpack5'> = {
     projectName: 'taro-app',
     date: '2026-1-3',
@@ -21,10 +21,13 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
       "@tarojs/plugin-generator"
     ],
     defineConstants: {
+      // 默认空字符串，dev.ts 会覆盖为本地地址；确保编译时文本替换，避免运行时引用 process
+      'process.env.API_BASE': '""',
     },
     copy: {
       patterns: [
-        { from: 'src/assets/', to: 'dist/assets/' }
+        { from: 'src/assets/', to: 'dist/assets/' },
+        { from: 'src/sitemap.json', to: 'dist/sitemap.json' }
       ],
       options: {
       }

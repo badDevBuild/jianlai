@@ -1,6 +1,7 @@
 export default defineAppConfig({
   pages: [
     'pages/index/index',
+    'pages/world/index',
     'pages/characters/index',
     'pages/character-detail/index',
     'pages/factions/index',
@@ -13,7 +14,10 @@ export default defineAppConfig({
     'pages/quotes/index',
     'pages/graph/index',
     'pages/timeline/index',
-    'pages/map/index'
+    'pages/map/index',
+    'pages/ugc-submit/index',
+    'pages/compare/index',
+    'pages/graph-spike/index'
   ],
   window: {
     backgroundTextStyle: 'light',
@@ -34,7 +38,7 @@ export default defineAppConfig({
         selectedIconPath: 'assets/icons/home-active.png'
       },
       {
-        pagePath: 'pages/graph/index',
+        pagePath: 'pages/graph-spike/index',
         text: '关系图谱',
         iconPath: 'assets/icons/graph.png',
         selectedIconPath: 'assets/icons/graph-active.png'
